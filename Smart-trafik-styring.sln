@@ -2,9 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{D82C56D6-B2CD-F611-9E31-04638F7EC30E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{CE609670-85B9-0D16-FB54-ED063D5D8A6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smart-trafic-controller-api", "api\Smart-trafic-controller-api\Smart-trafic-controller-api.csproj", "{2E71648C-1B81-AEDB-11F3-0399B2B82E12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTraficControlSystem", "frontend\SmartTraficControlSystem\SmartTraficControlSystem.csproj", "{7853AA4A-92BD-A426-FB30-A5365CBC949D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,18 +12,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2E71648C-1B81-AEDB-11F3-0399B2B82E12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E71648C-1B81-AEDB-11F3-0399B2B82E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E71648C-1B81-AEDB-11F3-0399B2B82E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E71648C-1B81-AEDB-11F3-0399B2B82E12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7853AA4A-92BD-A426-FB30-A5365CBC949D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7853AA4A-92BD-A426-FB30-A5365CBC949D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7853AA4A-92BD-A426-FB30-A5365CBC949D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7853AA4A-92BD-A426-FB30-A5365CBC949D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2E71648C-1B81-AEDB-11F3-0399B2B82E12} = {D82C56D6-B2CD-F611-9E31-04638F7EC30E}
+		{7853AA4A-92BD-A426-FB30-A5365CBC949D} = {CE609670-85B9-0D16-FB54-ED063D5D8A6D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {7A11B903-2792-4FD4-A790-98B70F2CE88F}
+		SolutionGuid = {066ED95E-73C0-460D-8B3A-CED7174949C2}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mariadb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart_traffic_mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: smart_traffic
+      MYSQL_USER: traffic_user
+      MYSQL_PASSWORD: traffic_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - smart_traffic_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  mariadb_data:
+    driver: local
+
+networks:
+  smart_traffic_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
