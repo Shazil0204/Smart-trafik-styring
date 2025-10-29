@@ -1,0 +1,71 @@
+﻿@page "/"
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
+    <MudGrid>
+
+        <!-- Flow Stats -->
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="4" Class="pa-4">
+                <MudText Typo="Typo.h6">Pedestrian Flow</MudText>
+                <MudProgressCircular Value="65" Color="Color.Success" Size="Size.Medium" />
+                <MudText Typo="Typo.body2" Class="mt-2">65 pedestrians/min</MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="4" Class="pa-4">
+                <MudText Typo="Typo.h6">Vehicle Flow</MudText>
+                <MudProgressCircular Value="80" Color="Color.Primary" Size="Size.Medium" />
+                <MudText Typo="Typo.body2" Class="mt-2">80 vehicles/min</MudText>
+            </MudPaper>
+        </MudItem>
+
+        <!-- Traffic Light Status -->
+        <MudItem xs="12" md="4">
+            <MudPaper Elevation="4" Class="pa-4">
+                <MudText Typo="Typo.h6">Current Light Status</MudText>
+                <MudGrid Spacing="2" Class="mt-2">
+                    <MudItem xs="2">
+                        <MudStack Direction="Direction.column">
+                            <MudAvatar Size="Size.Large" Color="Color.Success"
+                                Icon="@Icons.Material.Filled.PlayArrow" />
+                            <MudText Typo="Typo.caption">Vehicles</MudText>
+                        </MudStack>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudStack Direction="Direction.column">
+                            <MudAvatar Size="Size.Large" Color="Color.Error" Icon="@Icons.Material.Filled.Pause" />
+                            <MudText Typo="Typo.caption">Pedestrians</MudText>
+                        </MudStack>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+    <MudPaper elevation="4" class="mt-4 pa-4">
+        <MudChart Style="margin-bottom:40px;" ChartType="ChartType.Bar" ChartSeries="@_series"
+            @bind-SelectedIndex="_index" XAxisLabels="@_xAxisLabels" Width="100%" Height="350px"
+            AxisChartOptions="_axisChartOptions">
+        </MudChart>
+    </MudPaper>
+
+</MudContainer>
+@code {
+    private int _index = -1; //default value cannot be 0 -> first selectedindex is 0.
+    private AxisChartOptions _axisChartOptions = new AxisChartOptions()
+    {
+        XAxisLabelRotation = 30,
+        MatchBoundsToSize = true
+    };
+
+    private List<ChartSeries> _series = new List<ChartSeries>()
+{
+new ChartSeries() { Name = "Vehicles", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80, 15 , 40, 20, 25, 27, 46,
+60, 48, 80, 15 , 27, 46, 60, 48, 80, 15, 100 } },
+new ChartSeries() { Name = "pedestrians", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31,19, 24, 35, 13, 28,
+15, 13, 16, 31 , 13, 28, 15, 13, 16, 31, 90 } },
+
+};
+    private string[] _xAxisLabels = { "00:00", "00:01", "00:02", "00:03", "00:04", "00:05", "00:06", "00:07",
+"00:08","00:09", "00:10", "00:11", "00:12", "00:13", "00:14", "00:15", "00:16", "00:17", "00:18","00:19", "00:20",
+"00:21", "00:22", "00:23", "00:24" };
+}
