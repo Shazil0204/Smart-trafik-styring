@@ -3,3 +3,12 @@
 1761824069: Opening ipv4 listen socket on port 1883.
 1761824069: Opening ipv6 listen socket on port 1883.
 1761824069: mosquitto version 2.0.22 running
+1761824515: New connection from 172.19.0.1:56356 on port 1883.
+1761824515: New client connected from 172.19.0.1:56356 as mqttx_49d89ba0 (p5, c1, k60).
+1761825250: Client mqttx_49d89ba0 has exceeded timeout, disconnecting.
+1761825255: New connection from 172.19.0.1:44510 on port 1883.
+1761825255: New client connected from 172.19.0.1:44510 as mqttx_49d89ba0 (p5, c1, k60).
+1761825670: Client mqttx_49d89ba0 has exceeded timeout, disconnecting.
+1761825675: New connection from 172.19.0.1:60182 on port 1883.
+1761825675: New client connected from 172.19.0.1:60182 as mqttx_49d89ba0 (p5, c1, k60).
+1761825870: Saving in-memory database to /mosquitto/data//mosquitto.db.
