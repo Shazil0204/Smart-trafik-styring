@@ -122,7 +122,7 @@ namespace Smart_trafic_controller_api.Data
                 
                 entity.Property(e => e.SensorType)
                     .IsRequired()
-                    .HasMaxLength(100);
+                    .HasConversion<string>();
                 
                 entity.Property(e => e.SensorValue)
                     .IsRequired()
@@ -150,10 +150,10 @@ namespace Smart_trafic_controller_api.Data
                     .HasDefaultValue(false);
                 
                 entity.Property(e => e.VehicleLightStatus)
-                    .HasConversion<int>();
+                    .HasConversion<string>();
                 
                 entity.Property(e => e.PedLightStatus)
-                    .HasConversion<int>();
+                    .HasConversion<string>();
                 
                 entity.Property(e => e.Duration)
                     .HasDefaultValue(0);

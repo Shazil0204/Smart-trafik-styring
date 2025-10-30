@@ -15,13 +15,13 @@ namespace Smart_trafic_controller_api.Entities
 
         private User() { } // For EF Core
 
-        public User(Guid id, string userName, string password, bool isDeleted, DateTime createdAt)
+        public User(string userName, string password)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             UserName = userName;
             Password = password;
-            IsDeleted = isDeleted;
-            CreatedAt = createdAt;
+            IsDeleted = false;
+            CreatedAt = DateTime.UtcNow;
         }
 
         public void SoftDelete()

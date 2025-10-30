@@ -16,9 +16,9 @@ namespace Smart_trafic_controller_api.Entities
         public PedestrainLightStatus PedLightStatus { get; private set; }
         public int Duration { get; private set; }
         private TrafficEvent() { } // For EF Core
-        public TrafficEvent(Guid id, DateTime timeStamp, bool vehicleDetected, bool pedestrianDetected, vehicleLightStatus vehicleLightStatus, PedestrainLightStatus pedLightStatus, int duration)
+        public TrafficEvent(DateTime timeStamp, bool vehicleDetected, bool pedestrianDetected, vehicleLightStatus vehicleLightStatus, PedestrainLightStatus pedLightStatus, int duration)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             TimeStamp = timeStamp;
             VehicleDetected = vehicleDetected;
             PedestrianDetected = pedestrianDetected;

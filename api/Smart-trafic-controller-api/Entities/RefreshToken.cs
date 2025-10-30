@@ -18,15 +18,14 @@ namespace Smart_trafic_controller_api.Entities
 
         private RefreshToken() { } // For EF Core
 
-        public RefreshToken(int id, Guid userId, string tokenHash, DateTime createdAt, DateTime expiresAt, bool isRevoked, DateTime? revokedAt)
+        public RefreshToken(int id, Guid userId, string tokenHash, DateTime expiresAt)
         {
             Id = id;
             UserId = userId;
             TokenHash = tokenHash;
-            CreatedAt = createdAt;
+            CreatedAt = DateTime.UtcNow;
             ExpiresAt = expiresAt;
-            IsRevoked = isRevoked;
-            RevokedAt = revokedAt;
+            IsRevoked = false;
         }
 
         public bool IsActive => RevokedAt == null && !IsExpired;
