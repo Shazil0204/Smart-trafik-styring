@@ -13,16 +13,20 @@ namespace Smart_trafic_controller_api.Entities
         public string TokenHash { get; private set; } = null!;
         public DateTime CreatedAt { get; private set; }
         public DateTime ExpiresAt { get; private set; }
+        public bool IsRevoked { get; private set; }
+        public DateTime? RevokedAt { get; private set; }
 
         private RefreshToken() { } // For EF Core
 
-        public RefreshToken(int id, Guid userId, string tokenHash, DateTime createdAt, DateTime expiresAt)
+        public RefreshToken(int id, Guid userId, string tokenHash, DateTime createdAt, DateTime expiresAt, bool isRevoked, DateTime? revokedAt)
         {
             Id = id;
             UserId = userId;
             TokenHash = tokenHash;
             CreatedAt = createdAt;
             ExpiresAt = expiresAt;
+            IsRevoked = isRevoked;
+            RevokedAt = revokedAt;
         }
     }
 }
