@@ -8,8 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Smart_trafic_controller_api.Data
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+    public class AppDbContext : DbContext
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
@@ -24,12 +28,6 @@ namespace Smart_trafic_controller_api.Data
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id)
-                    .HasColumnType("CHAR(36)")
-                    .HasConversion(
-                        v => v.ToString(),
-                        v => Guid.Parse(v));
-                
                 entity.Property(e => e.UserName)
                     .IsRequired()
                     .HasMaxLength(50);
@@ -45,7 +43,6 @@ namespace Smart_trafic_controller_api.Data
                     .HasDefaultValue(false);
                 
                 entity.Property(e => e.CreatedAt)
-                    .HasColumnType("DATETIME")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
 
@@ -56,28 +53,21 @@ namespace Smart_trafic_controller_api.Data
                 entity.Property(e => e.Id)
                     .ValueGeneratedOnAdd();
                 
-                entity.Property(e => e.UserId)
-                    .HasColumnType("CHAR(36)")
-                    .HasConversion(
-                        v => v.ToString(),
-                        v => Guid.Parse(v));
-                
                 entity.Property(e => e.TokenHash)
                     .IsRequired()
                     .HasMaxLength(255);
                 
                 entity.Property(e => e.CreatedAt)
-                    .HasColumnType("DATETIME")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.ExpiresAt)
-                    .HasColumnType("DATETIME");
-                
+                    .IsRequired();
+
                 entity.Property(e => e.IsRevoked)
                     .HasDefaultValue(false);
                     
                 entity.Property(e => e.RevokedAt)
-                    .HasColumnType("DATETIME");
+                    .IsRequired(false);
 
                 // Configure relationship with User
                 entity.HasOne(e => e.User)
@@ -94,7 +84,6 @@ namespace Smart_trafic_controller_api.Data
                     .ValueGeneratedOnAdd();
                 
                 entity.Property(e => e.Timestamp)
-                    .HasColumnType("DATETIME")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 
                 entity.Property(e => e.OperationType)
@@ -118,7 +107,6 @@ namespace Smart_trafic_controller_api.Data
                     .ValueGeneratedOnAdd();
                 
                 entity.Property(e => e.Timestamp)
-                    .HasColumnType("DATETIME")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 
                 entity.Property(e => e.SensorType)
@@ -134,14 +122,8 @@ namespace Smart_trafic_controller_api.Data
             modelBuilder.Entity<TrafficEvent>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id)
-                    .HasColumnType("CHAR(36)")
-                    .HasConversion(
-                        v => v.ToString(),
-                        v => Guid.Parse(v));
                 
                 entity.Property(e => e.TimeStamp)
-                    .HasColumnType("DATETIME")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 
                 entity.Property(e => e.VehicleDetected)

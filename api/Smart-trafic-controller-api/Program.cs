@@ -21,8 +21,8 @@ namespace Smart_trafic_controller_api
 
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseMySql(
-                    builder.Configuration.GetConnectionString("DefaultConnection"),
-                    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+                    conn,
+                    ServerVersion.AutoDetect(conn)
                 ));
 
             builder.Services.AddScoped<IUserService, UserService>();
@@ -34,7 +34,10 @@ namespace Smart_trafic_controller_api
 
             string? jwtSecretKey = builder.Configuration["JwtSettings:Key"];
             if (string.IsNullOrEmpty(jwtSecretKey))
-                throw new Exception("JWT SecretKey is missing in configuration!");
+            {
+                // Use a default key for design-time scenarios
+                jwtSecretKey = "This-is-my-very-long-random-secret-key-379";
+            }
 
             builder.Services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
@@ -45,8 +48,8 @@ namespace Smart_trafic_controller_api
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = "MyApp",
-                        ValidAudience = "MyAppUsers",
+                        ValidIssuer = builder.Configuration["JwtSettings:Issuer"] ?? "smart trafic controller api",
+                        ValidAudience = builder.Configuration["JwtSettings:Audience"] ?? "smart trafic controller api users",
                         IssuerSigningKey = new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(jwtSecretKey))
                     };
