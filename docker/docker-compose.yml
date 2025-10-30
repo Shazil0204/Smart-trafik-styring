@@ -43,7 +43,7 @@ services:
       - ./data:/mosquitto/data
       - ./log:/mosquitto/log
     networks:
-      - mqttnet
+      - smart_traffic_network
 
 volumes:
   mariadb_data:
@@ -55,5 +55,3 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/16
-  mqttnet:
-    driver: bridge
