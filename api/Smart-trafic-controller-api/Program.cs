@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using Smart_trafic_controller_api.Data;
+
 namespace Smart_trafic_controller_api
 {
     public class Program
@@ -8,6 +11,13 @@ namespace Smart_trafic_controller_api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            
+            // Configure Entity Framework with MariaDB
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseMySql(
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+                ));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -26,7 +36,6 @@ namespace Smart_trafic_controller_api
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
