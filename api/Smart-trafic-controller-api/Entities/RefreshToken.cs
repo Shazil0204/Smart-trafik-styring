@@ -9,7 +9,7 @@ namespace Smart_trafic_controller_api.Entities
     {
         public int Id { get; private set; }
         public Guid UserId { get; private set; }
-        public string TokenHash { get; private set; }
+        public string TokenHash { get; private set; } = null!;
         public DateTime CreatedAt { get; private set; }
         public DateTime ExpiresAt { get; private set; }
 

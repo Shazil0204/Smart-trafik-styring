@@ -8,10 +8,10 @@ namespace Smart_trafic_controller_api.Entities
     public class User
     {
         public Guid Id { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string UserName { get; private set; }
-        public string Password { get; private set; }
+        public string FirstName { get; private set; } = null!;
+        public string LastName { get; private set; } = null!;
+        public string UserName { get; private set; } = null!;
+        public string Password { get; private set; } = null!;
         public bool IsDeleted { get; private set; }
         public DateTime CreatedAt { get; private set; }
 

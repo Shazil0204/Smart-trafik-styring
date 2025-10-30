@@ -9,9 +9,9 @@ namespace Smart_trafic_controller_api.Entities
     {
         public int Id { get; private set; }
         public DateTime Timestamp { get; private set; }
-        public string OperationType { get; private set; }
-        public string EntityName { get; private set; }
-        public string EntityId { get; private set; }
+        public string OperationType { get; private set; } = null!;
+        public string EntityName { get; private set; } = null!;
+        public string EntityId { get; private set; } = null!;
 
         private AuditLog() { } // For EF Core
         

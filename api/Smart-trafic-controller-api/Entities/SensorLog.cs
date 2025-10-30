@@ -9,8 +9,8 @@ namespace Smart_trafic_controller_api.Entities
     {
         public int Id { get; private set; }
         public DateTime Timestamp { get; private set; }
-        public string SensorType { get; private set; }
-        public string SensorValue { get; private set; }
+        public string SensorType { get; private set; } = null!;
+        public string SensorValue { get; private set; } = null!;
 
         private SensorLog() { } // For EF Core
 
