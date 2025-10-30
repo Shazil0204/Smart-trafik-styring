@@ -242,4 +242,5 @@ Migrations
 
 # Production appsettings
 appsettings.json
-```
+
+mosquitto.log
