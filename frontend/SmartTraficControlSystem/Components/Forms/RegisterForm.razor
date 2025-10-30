@@ -1,0 +1,65 @@
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+
+
+<MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" Class="w-100">
+    <MudTextField T="string" Label="User name" Required="true" InputType="InputType.Text"
+        RequiredError="User name is required." OnlyValidateIfDirty Clearable Class="mb-3" />
+
+    <MudTextField T="string" Label="Password" InputType="InputType.Password" Required="true"
+        RequiredError="Password is required." OnlyValidateIfDirty Clearable Class="mb-3" />
+
+    <MudTextField T="string" Label="Confirm Password" InputType="InputType.Password" Required="true"
+        RequiredError="Please confirm your password." Validation="@ConfirmPasswordValidation" OnlyValidateIfDirty
+        Clearable Class="mb-4" />
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="w-100 mb-2" OnClick="@(Submit)">
+        Register
+    </MudButton>
+
+    <MudText Class="mt-2 text-center">
+        Already have an account?
+        <MudButton Variant="Variant.Text" Color="Color.Secondary" Class="ml-1" OnClick="@GoToAccount">
+            Login
+        </MudButton>
+    </MudText>
+</MudForm>
+
+@code {
+    [Parameter] public EventCallback<bool> HasAccount { get; set; }
+    [Parameter] public EventCallback OnRegisterRequested { get; set; }
+
+    bool success;
+    MudForm form;
+    string[] errors = { };
+
+
+    private async Task GoToAccount()
+    {
+        await HasAccount.InvokeAsync(true);
+    }
+
+    private string ConfirmPasswordValidation(string? confirmPassword)
+    {
+        if (string.IsNullOrWhiteSpace(confirmPassword))
+            return "Please confirm your password.";
+
+        var regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+        return regex.IsMatch(confirmPassword)
+        ? null
+        : "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.";
+    }
+    private async Task Submit()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+
+        }
+    }
+
+
+
+
+}

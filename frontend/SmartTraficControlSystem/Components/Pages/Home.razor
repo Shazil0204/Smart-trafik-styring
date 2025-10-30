@@ -1,4 +1,7 @@
 ﻿@page "/"
+@* <AuthorizeView>
+
+</AuthorizeView> *@
 <MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
     <MudGrid>
 
@@ -7,7 +10,7 @@
             <MudPaper Elevation="4" Class="pa-4 d-flex flex-column justify-space-between" Style="height:100%">
                 <MudText Typo="Typo.h6">Pedestrian Flow</MudText>
                 <MudProgressCircular Value="65" Color="Color.Success" Size="Size.Medium" />
-                <MudText Typo="Typo.body2" Class="mt-2">65 pedestrians/min</MudText>
+                <MudText Typo="Typo.body2" Class="mt-2">65 pedestrians/hour</MudText>
             </MudPaper>
         </MudItem>
 
@@ -15,7 +18,7 @@
             <MudPaper Elevation="4" Class="pa-4 d-flex flex-column justify-space-between" Style="height:100%">
                 <MudText Typo="Typo.h6">Vehicle Flow</MudText>
                 <MudProgressCircular Value="80" Color="Color.Primary" Size="Size.Medium" />
-                <MudText Typo="Typo.body2" Class="mt-2">80 vehicles/min</MudText>
+                <MudText Typo="Typo.body2" Class="mt-2">80 vehicles/hour</MudText>
             </MudPaper>
         </MudItem>
 
@@ -66,7 +69,7 @@ new ChartSeries() { Name = "pedestrians", Data = new double[] { 19, 24, 35, 13, 
 15, 13, 16, 31 , 13, 28, 15, 13, 16, 31, 90 } },
 
 };
-    private string[] _xAxisLabels = { "00:00", "00:01", "00:02", "00:03", "00:04", "00:05", "00:06", "00:07",
-"00:08","00:09", "00:10", "00:11", "00:12", "00:13", "00:14", "00:15", "00:16", "00:17", "00:18","00:19", "00:20",
-"00:21", "00:22", "00:23", "00:24" };
+    private string[] _xAxisLabels = { "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00",
+"08:00","09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00","19:00", "20:00",
+"21:00", "22:00", "23:00", "24:00" };
 }

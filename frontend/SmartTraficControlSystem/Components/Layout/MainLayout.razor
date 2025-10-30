@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using SmartTraficControlSystem.Components.PopUp
+
+@inherits LayoutComponentBase
+@inject IDialogService DialogService
 
 <MudThemeProvider Theme="@_selectedTheme.Value" />
 <MudDialogProvider />
@@ -9,9 +12,12 @@
     <MudAppBar Elevation="1" Color="Color.Primary">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Secondary" Edge="Edge.Start"
             OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h5" Class="ml-3" Color="Color.Default">Application</MudText>
+        <MudText Typo="Typo.h5" Class="ml-3" Color="Color.Default">Smart Traffic Control System</MudText>
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Tertiary" Edge="Edge.End" />
+
+        <MudIconButton Color="Color.Dark" Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large"
+            OnClick="@((e) => OpenLoginDialog())" />
+
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
@@ -22,7 +28,15 @@
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
+    
+
+    bool _drawerOpen = false;
+
+    private Task OpenLoginDialog()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        return DialogService.ShowAsync<UserAccessDialog>("Simple Dialog", options);
+    }
 
     void DrawerToggle()
     {
