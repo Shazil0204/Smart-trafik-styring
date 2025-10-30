@@ -244,3 +244,4 @@ Migrations
 appsettings.json
 
 mosquitto.log
+mosquitto.db
