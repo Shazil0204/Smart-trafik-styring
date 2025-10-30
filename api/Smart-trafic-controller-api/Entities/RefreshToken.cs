@@ -28,5 +28,14 @@ namespace Smart_trafic_controller_api.Entities
             IsRevoked = isRevoked;
             RevokedAt = revokedAt;
         }
+
+        public bool IsActive => RevokedAt == null && !IsExpired;
+
+        public bool IsExpired => DateTime.UtcNow >= ExpiresAt;
+
+        public void Revoke()
+        {
+            RevokedAt = DateTime.UtcNow;
+        }
     }
 }

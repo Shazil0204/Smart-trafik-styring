@@ -29,14 +29,6 @@ namespace Smart_trafic_controller_api.Data
                         v => v.ToString(),
                         v => Guid.Parse(v));
                 
-                entity.Property(e => e.FirstName)
-                    .IsRequired()
-                    .HasMaxLength(100);
-                
-                entity.Property(e => e.LastName)
-                    .IsRequired()
-                    .HasMaxLength(100);
-                
                 entity.Property(e => e.UserName)
                     .IsRequired()
                     .HasMaxLength(50);
