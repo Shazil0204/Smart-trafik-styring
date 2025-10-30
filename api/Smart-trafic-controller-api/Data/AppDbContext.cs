@@ -76,8 +76,14 @@ namespace Smart_trafic_controller_api.Data
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("DATETIME")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 entity.Property(e => e.ExpiresAt)
+                    .HasColumnType("DATETIME");
+                
+                entity.Property(e => e.IsRevoked)
+                    .HasDefaultValue(false);
+                    
+                entity.Property(e => e.RevokedAt)
                     .HasColumnType("DATETIME");
 
                 // Configure relationship with User
