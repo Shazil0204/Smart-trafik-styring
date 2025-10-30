@@ -9,8 +9,8 @@ namespace Smart_trafic_controller_api.Interfaces
 {
     public interface IUserService
     {
-        Task<User> CreateUserAsync(CreateUserRequestDTO dTO);
-        Task<User?> LoginUserAsync(UserLoginRequestDTO dTO);
+        Task<UserResponseDTO> CreateUserAsync(CreateUserRequestDTO dTO);
+        Task<UserResponseDTO?> LoginUserAsync(UserLoginRequestDTO dTO);
         Task<bool> LogoutUserAsync(Guid userId);
         Task<bool> SoftDeleteUserAsync(Guid userId);
     }

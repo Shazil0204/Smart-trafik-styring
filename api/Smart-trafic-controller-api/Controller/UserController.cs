@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Smart_trafic_controller_api.DTOs;
-using Smart_trafic_controller_api.Entities;
 using Smart_trafic_controller_api.Interfaces;
 
 namespace Smart_trafic_controller_api.Controller
@@ -22,7 +21,7 @@ namespace Smart_trafic_controller_api.Controller
         [HttpPost("create")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDTO requestDTO)
         {
-            User createdUser = await _userService.CreateUserAsync(requestDTO);
+            UserResponseDTO createdUser = await _userService.CreateUserAsync(requestDTO);
             if (createdUser == null)
             {
                 return BadRequest("User could not be created.");
@@ -33,7 +32,7 @@ namespace Smart_trafic_controller_api.Controller
         [HttpPost("login")]
         public async Task<IActionResult> LoginUser([FromBody] UserLoginRequestDTO requestDTO)
         {
-            User? user = await _userService.LoginUserAsync(requestDTO);
+            UserResponseDTO? user = await _userService.LoginUserAsync(requestDTO);
             if (user == null)
             {
                 return Unauthorized("Invalid username or password.");
