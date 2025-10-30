@@ -1,6 +1,5 @@
 #include <PubSubClient.h>
 #include <WiFiS3.h>
-#include <UUID.h>
 
 // WiFi credentials
 char ssid[] = "Lund iPhone";
@@ -26,51 +25,49 @@ const int blue_btn_pin = 8;
 unsigned long lastSensorRead = 0;
 unsigned long lastWiFiCheck  = 0;
 
-enum TrafficLightType { PEDESTRIAN, VEHICLE };
-enum TrafficLightColor { RED, GREEN, BLUE };
+enum TrafficLightColor { RED, GREEN, YELLOW };
 
 class TrafficLight {
-  char id[37];
+  int redPin;
+  int greenPin;
+  int bluePin;
 
   public:
-    TrafficLight(TrafficLightType type) {
-      id = createUUID();
+    TrafficLight(int redPin, int greenPin, int bluePin) {
+      this->redPin = redPin;
+      this->greenPin = greenPin;
+      this->bluePin = bluePin;
+
+      pinMode(redPin, OUTPUT);
+      pinMode(greenPin, OUTPUT);
+      pinMode(bluePin, OUTPUT);
+    }
+    
+  public:
+    void setRedColor() {
+      setColor(255, 0, 0);
     }
 
-  private:
-    char* createUUID() {
-      // TODO: Create UUID
+  public:
+    void setGreenColor() {
+      setColor(0, 255, 0);
     }
+
+  void setColor(int redValue, int greenValue, int blueValue) {
+    analogWrite(redPin, redValue);
+    analogWrite(greenPin, greenValue);
+    analogWrite(bluePin, blueValue);
+  }
 };
 
-TrafficLightColor vehicleTrafficLightState    = RED;
-TrafficLightColor pedestrianTrafficLightState = RED;
+TrafficLight pedestrianTrafficLight(pedestrian_traffic_light_red_pin, pedestrian_traffic_light_green_pin, pedestrian_traffic_light_blue_pin);
+TrafficLight vehicleTrafficLight(vehicle_traffic_light_red_pin, vehicle_traffic_light_green_pin, vehicle_traffic_light_blue_pin);
 
 void setup() {
   Serial.begin(9600);
 
   setupDepthSensor();
-  setupTrafficLight();
   setupWiFi();
-
-  pinMode(blue_btn_pin, INPUT_PULLUP); // safer for button wiring
-  digitalWrite(vehicle_traffic_light_red_pin, HIGH);
-}
-
-void setupTrafficLight() {
-  pinMode(vehicle_traffic_light_red_pin, OUTPUT);
-  pinMode(vehicle_traffic_light_blue_pin, OUTPUT);
-  pinMode(vehicle_traffic_light_green_pin, OUTPUT);
-  digitalWrite(vehicle_traffic_light_red_pin, LOW);
-  digitalWrite(vehicle_traffic_light_blue_pin, LOW);
-  digitalWrite(vehicle_traffic_light_green_pin, LOW);
-
-  pinMode(pedestrian_traffic_light_red_pin, OUTPUT);
-  pinMode(pedestrian_traffic_light_blue_pin, OUTPUT);
-  pinMode(pedestrian_traffic_light_green_pin, OUTPUT);
-  digitalWrite(pedestrian_traffic_light_red_pin, LOW);
-  digitalWrite(pedestrian_traffic_light_blue_pin, LOW);
-  digitalWrite(pedestrian_traffic_light_green_pin, LOW);
 }
 
 void setupWiFi() {
@@ -112,11 +109,11 @@ void loop() {
 void trafficLightController(unsigned long runTime) {
   float vehicleDistance = calculateDistanceToVehicle();
   if(vehicleDistance > 20) {
-    changeTrafficLightColor(PEDESTRIAN, RED);
-    changeTrafficLightColor(VEHICLE, GREEN);
+    pedestrianTrafficLight.setRedColor(); 
+    vehicleTrafficLight.setGreenColor(); 
   } else {
-    changeTrafficLightColor(PEDESTRIAN, GREEN);
-    changeTrafficLightColor(VEHICLE, RED);
+    pedestrianTrafficLight.setGreenColor();
+    vehicleTrafficLight.setRedColor(); 
   }
 }
 
@@ -153,26 +150,4 @@ float calculateDistanceToVehicle() {
   Serial.println(" cm");
 
   return depth_sensor_dist_raw;
-}
-
-void toggleTrafficLight(TrafficLightType trafficLight) {
-}
-
-void changeTrafficLightColor(TrafficLightType trafficLight, TrafficLightColor color) {
-  int redPin    = trafficLight == VEHICLE ? vehicle_traffic_light_red_pin : pedestrian_traffic_light_red_pin;
-  int bluePin = trafficLight == VEHICLE ? vehicle_traffic_light_blue_pin : pedestrian_traffic_light_blue_pin;
-  int greenPin  = trafficLight == VEHICLE ? vehicle_traffic_light_green_pin : pedestrian_traffic_light_green_pin;
-
-  digitalWrite(redPin, LOW);
-  digitalWrite(greenPin, LOW);
-  digitalWrite(bluePin, LOW);
-
-  if(color == RED) {
-    digitalWrite(redPin, HIGH);
-  } else if(color == GREEN) {
-    digitalWrite(greenPin, HIGH);
-  } else {
-    digitalWrite(greenPin, HIGH);
-    digitalWrite(redPin, HIGH);
-  }
 }
