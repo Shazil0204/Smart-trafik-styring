@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Smart_trafic_controller_api.Entities;
+using Smart_trafic_controller_api.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Smart_trafic_controller_api.Data
@@ -121,8 +122,8 @@ namespace Smart_trafic_controller_api.Data
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 
                 entity.Property(e => e.SensorType)
-                    .IsRequired()
-                    .HasConversion<string>();
+                    .HasConversion<string>()
+                    .HasMaxLength(50);
                 
                 entity.Property(e => e.SensorValue)
                     .IsRequired()
@@ -150,10 +151,12 @@ namespace Smart_trafic_controller_api.Data
                     .HasDefaultValue(false);
                 
                 entity.Property(e => e.VehicleLightStatus)
-                    .HasConversion<string>();
+                    .HasConversion<string>()
+                    .HasMaxLength(50);
                 
                 entity.Property(e => e.PedLightStatus)
-                    .HasConversion<string>();
+                    .HasConversion<string>()
+                    .HasMaxLength(50);
                 
                 entity.Property(e => e.Duration)
                     .HasDefaultValue(0);

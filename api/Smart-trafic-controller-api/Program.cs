@@ -1,6 +1,11 @@
-
+using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Smart_trafic_controller_api.Data;
+using Smart_trafic_controller_api.Interfaces;
+using Smart_trafic_controller_api.Repositories;
+using Smart_trafic_controller_api.Services;
 
 namespace Smart_trafic_controller_api
 {
@@ -10,23 +15,50 @@ namespace Smart_trafic_controller_api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            
-            // Configure Entity Framework with MariaDB
+            string? conn = builder.Configuration.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrEmpty(conn))
+                throw new Exception("DefaultConnection string is missing or not loaded!");
+
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseMySql(
                     builder.Configuration.GetConnectionString("DefaultConnection"),
                     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
                 ));
 
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            string? jwtSecretKey = builder.Configuration["JwtSettings:Key"];
+            if (string.IsNullOrEmpty(jwtSecretKey))
+                throw new Exception("JWT SecretKey is missing in configuration!");
+
+            builder.Services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = "MyApp",
+                        ValidAudience = "MyAppUsers",
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(jwtSecretKey))
+                    };
+                });
+
+            builder.Services.AddControllers().AddNewtonsoftJson(Options =>
+            {
+                Options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

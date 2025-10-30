@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Smart_trafic_controller_api.DTOs
 {
-    public class CreateUserRequestDTO(string userName, string password)
+    public class UserLoginRequestDTO (string userName, string password)
     {
         public string UserName { get; set; } = userName;
         public string Password { get; set; } = password;

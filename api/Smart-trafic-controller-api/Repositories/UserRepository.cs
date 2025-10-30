@@ -20,6 +20,12 @@ namespace Smart_trafic_controller_api.Repositories
             return createdUser;
         }
 
+        public async Task<bool> GetUserByUserNameAsync(string userName)
+        {
+            User? user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+            return user != null;
+        }
+
         public async Task<User?> LoginUserAsync(string userName, string password)
         {
             User? user = await _context.Users
