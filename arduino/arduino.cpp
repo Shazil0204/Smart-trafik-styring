@@ -1,22 +1,7 @@
 #include <PubSubClient.h>
 #include <WiFiS3.h>
-
-// WiFi credentials
-char ssid[] = "Lund iPhone";
-char pass[] = "ZXiDbVg7R2";
-
-// Ultrasonic sensor pins
-const int depth_sensor_trans_pin = 11; // Trig
-const int depth_sensor_recv_pin  = 10; // Echo
-
-// Traffic light pins
-const int vehicle_traffic_light_red_pin   = 6;
-const int vehicle_traffic_light_blue_pin  = 4;
-const int vehicle_traffic_light_green_pin = 5;
-
-const int pedestrian_traffic_light_red_pin   = 7;
-const int pedestrian_traffic_light_blue_pin  = 3;
-const int pedestrian_traffic_light_green_pin = 2;
+#include "config.h"
+#include "trafficLight.h"
 
 // Button pin (set as INPUT)
 const int blue_btn_pin = 8;
@@ -25,56 +10,32 @@ const int blue_btn_pin = 8;
 unsigned long lastSensorRead = 0;
 unsigned long lastWiFiCheck  = 0;
 
-enum TrafficLightColor { RED, GREEN, YELLOW };
+// Cache traffic light state
+bool didLastCheckDetectVehicle;
 
-class TrafficLight {
-  int redPin;
-  int greenPin;
-  int bluePin;
+WiFiClient wifiClient;
+PubSubClient client(wifiClient);
 
-  public:
-    TrafficLight(int redPin, int greenPin, int bluePin) {
-      this->redPin = redPin;
-      this->greenPin = greenPin;
-      this->bluePin = bluePin;
-
-      pinMode(redPin, OUTPUT);
-      pinMode(greenPin, OUTPUT);
-      pinMode(bluePin, OUTPUT);
-    }
-    
-  public:
-    void setRedColor() {
-      setColor(255, 0, 0);
-    }
-
-  public:
-    void setGreenColor() {
-      setColor(0, 255, 0);
-    }
-
-  void setColor(int redValue, int greenValue, int blueValue) {
-    analogWrite(redPin, redValue);
-    analogWrite(greenPin, greenValue);
-    analogWrite(bluePin, blueValue);
-  }
-};
-
-TrafficLight pedestrianTrafficLight(pedestrian_traffic_light_red_pin, pedestrian_traffic_light_green_pin, pedestrian_traffic_light_blue_pin);
-TrafficLight vehicleTrafficLight(vehicle_traffic_light_red_pin, vehicle_traffic_light_green_pin, vehicle_traffic_light_blue_pin);
+TrafficLight pedestrianTrafficLight(PEDESTRIAN_TRAFFIC_LIGHT_RED_PIN, PEDESTRIAN_TRAFFIC_LIGHT_GREEN_PIN, PEDESTRIAN_TRAFFIC_LIGHT_BLUE_PIN);
+TrafficLight vehicleTrafficLight(VEHICLE_TRAFFIC_LIGHT_RED_PIN, VEHICLE_TRAFFIC_LIGHT_GREEN_PIN, VEHICLE_TRAFFIC_LIGHT_BLUE_PIN);
 
 void setup() {
   Serial.begin(9600);
 
   setupDepthSensor();
   setupWiFi();
+  setupMQTT();
+}
+
+void setupMQTT() {
+  client.setServer(MQTT_SERVER, MQTT_PORT);
 }
 
 void setupWiFi() {
   Serial.print("Connecting to WiFi: ");
-  Serial.println(ssid);
+  Serial.println(WIFI_SSID);
 
-  WiFi.begin(ssid, pass);
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
 
   unsigned long start = millis();
   while (WiFi.status() != WL_CONNECTED && millis() - start < 15000) {
@@ -92,12 +53,17 @@ void setupWiFi() {
 }
 
 void setupDepthSensor() {
-  pinMode(depth_sensor_trans_pin, OUTPUT); // transmit
-  pinMode(depth_sensor_recv_pin, INPUT);   // receive
+  pinMode(DISTANCE_SENSOR_TRANS_PIN, OUTPUT); // transmit
+  pinMode(DISTANCE_SENSOR_ECHO_PIN, INPUT);   // receive
 }
 
 void loop() {
   unsigned long runTime = millis();
+
+  if (!client.connected()) {
+    handleMQTT();
+  }
+  client.loop(); // keep MQTT alive
 
   if (runTime - lastSensorRead >= 200) {
     trafficLightController(runTime);
@@ -108,12 +74,16 @@ void loop() {
 
 void trafficLightController(unsigned long runTime) {
   float vehicleDistance = calculateDistanceToVehicle();
-  if(vehicleDistance > 20) {
+  if(vehicleDistance < 20 && !didLastCheckDetectVehicle) {
     pedestrianTrafficLight.setRedColor(); 
     vehicleTrafficLight.setGreenColor(); 
-  } else {
+    client.publish("traffic/light", "VEHICLE_GREEN");
+    didLastCheckDetectVehicle = true;
+  } else if (vehicleDistance > 20 && didLastCheckDetectVehicle) {
     pedestrianTrafficLight.setGreenColor();
     vehicleTrafficLight.setRedColor(); 
+    client.publish("traffic/light", "VEHICLE_RED");
+    didLastCheckDetectVehicle = false;
   }
 }
 
@@ -127,19 +97,34 @@ void handleWiFi(unsigned long runTime) {
   }
 }
 
+void handleMQTT() {
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    if (client.connect("ArduinoClient")) {
+      Serial.println("connected");
+      client.subscribe("traffic/control"); // example subscription
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      delay(5000);
+    }
+  }
+}
+
 float calculateDistanceToVehicle() {
   unsigned long duration;
 
   // Trigger ultrasonic pulse
-  digitalWrite(depth_sensor_trans_pin, LOW);
+  digitalWrite(DISTANCE_SENSOR_TRANS_PIN, LOW);
   delayMicroseconds(5);
-  digitalWrite(depth_sensor_trans_pin, HIGH);
+  digitalWrite(DISTANCE_SENSOR_TRANS_PIN, HIGH);
   delayMicroseconds(10);
-  digitalWrite(depth_sensor_trans_pin, LOW);
+  digitalWrite(DISTANCE_SENSOR_TRANS_PIN, LOW);
 
   // Listen for echo with timeout (30 ms)
-  duration = pulseIn(depth_sensor_recv_pin, HIGH, 30000);
-
+  duration = pulseIn(DISTANCE_SENSOR_ECHO_PIN, HIGH, 30000);
+ 
   float depth_sensor_dist_raw;
 
   // Convert to cm
