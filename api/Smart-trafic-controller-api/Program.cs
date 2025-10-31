@@ -27,6 +27,8 @@ namespace Smart_trafic_controller_api
 
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ITrafficEventService, TrafficEventService>();
+            builder.Services.AddScoped<ITrafficEventRepository, TrafficEventRepository>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();

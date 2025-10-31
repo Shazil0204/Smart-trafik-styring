@@ -2,24 +2,50 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Smart_trafic_controller_api.Data;
 using Smart_trafic_controller_api.Entities;
+using Smart_trafic_controller_api.Interfaces;
 
 namespace Smart_trafic_controller_api.Repositories
 {
-    public class TrafficEventRepository(AppDbContext context)
+    public class TrafficEventRepository(AppDbContext context): ITrafficEventRepository
     {
-        public readonly AppDbContext _context = context;
+        private readonly AppDbContext _context = context;
 
         public async Task<List<TrafficEvent>> GetAllTrafficEventsAsync()
         {
             try
             {
-                return _context.TrafficEvents.ToList();
+                List<TrafficEvent> trafficEvents = await _context.TrafficEvents.ToListAsync();
+                if (trafficEvents == null || !trafficEvents.Any())
+                {
+                    return null;
+                }
+                return trafficEvents;
             }
             catch (Exception ex)
             {
                 throw new Exception("An error occurred while retrieving traffic events.", ex);
+            }
+        }
+
+        public async Task<List<TrafficEvent>> GetTrafficEventsByTimeRangeAsync(DateTime startTime, DateTime endTime)
+        {
+            try
+            {
+                List<TrafficEvent> trafficEvents = await _context.TrafficEvents
+                    .Where(te => te.TimeStamp >= startTime && te.TimeStamp <= endTime)
+                    .ToListAsync();
+                if (trafficEvents == null || !trafficEvents.Any())
+                {
+                    return null;
+                }
+                return trafficEvents;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving traffic events by time range.", ex);
             }
         }
 
