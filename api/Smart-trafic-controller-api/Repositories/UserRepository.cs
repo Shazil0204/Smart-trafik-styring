@@ -15,9 +15,16 @@ namespace Smart_trafic_controller_api.Repositories
 
         public async Task<User> CreateUserAsync(User user)
         {
-            User createdUser = _context.Users.Add(user).Entity;
-            await _context.SaveChangesAsync();
-            return createdUser;
+            try
+            {
+                User createdUser = _context.Users.Add(user).Entity;
+                await _context.SaveChangesAsync();
+                return createdUser;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while creating the user.", ex);
+            }
         }
 
         public async Task<bool> GetUserByUserNameAsync(string userName)
