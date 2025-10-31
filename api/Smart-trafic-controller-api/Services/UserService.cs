@@ -1,4 +1,4 @@
-using Smart_trafic_controller_api.DTOs;
+using Smart_trafic_controller_api.DTOs.User;
 using Smart_trafic_controller_api.Entities;
 using Smart_trafic_controller_api.Interfaces;
 using Smart_trafic_controller_api.Mappers;
