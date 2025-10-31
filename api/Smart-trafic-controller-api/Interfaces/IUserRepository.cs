@@ -8,9 +8,8 @@ namespace Smart_trafic_controller_api.Interfaces
 {
     public interface IUserRepository
     {
-        Task<bool> GetUserByUserNameAsync(string userName);
+        Task<User?> GetUserByUserNameAsync(string userName);
         Task<User> CreateUserAsync(User user);
-        Task<User?> LoginUserAsync(string userName, string password);
         Task<bool> SoftDeleteUserAsync(Guid userId);
     }
 }

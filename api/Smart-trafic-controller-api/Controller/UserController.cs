@@ -21,45 +21,73 @@ namespace Smart_trafic_controller_api.Controller
         [HttpPost("create")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDTO requestDTO)
         {
-            UserResponseDTO createdUser = await _userService.CreateUserAsync(requestDTO);
-            if (createdUser == null)
+            try
             {
-                return BadRequest("User could not be created.");
+                var createdUser = await _userService.CreateUserAsync(requestDTO);
+                if (createdUser == null)
+                    return BadRequest("User could not be created.");
+
+                return Ok(createdUser);
             }
-            return Ok(createdUser);
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> LoginUser([FromBody] UserLoginRequestDTO requestDTO)
         {
-            UserResponseDTO? user = await _userService.LoginUserAsync(requestDTO);
-            if (user == null)
+            try
             {
-                return Unauthorized("Invalid username or password.");
+                UserResponseDTO? user = await _userService.LoginUserAsync(requestDTO);
+                if (user == null)
+                {
+                    return Unauthorized("Invalid username or password.");
+                }
+                return Ok(user);
             }
-            return Ok(user);
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost("logout/{userId}")]
         public async Task<IActionResult> LogoutUser([FromRoute] Guid userId)
         {
-            bool result = await _userService.LogoutUserAsync(userId);
-            if (!result)
+            try
             {
-                return BadRequest("Logout failed.");
+                bool result = await _userService.LogoutUserAsync(userId);
+                if (!result)
+                {
+                    return BadRequest("Logout failed.");
+                }
+                return Ok("Logout successful.");
             }
-            return Ok("Logout successful.");
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpDelete("soft-delete/{userId}")]
         public async Task<IActionResult> SoftDeleteUser([FromRoute] Guid userId)
         {
-            bool result = await _userService.SoftDeleteUserAsync(userId);
-            if (!result)
+            try
             {
-                return BadRequest("User could not be deleted.");
+                bool result = await _userService.SoftDeleteUserAsync(userId);
+                if (!result)
+                {
+                    return BadRequest("User could not be deleted.");
+                }
+                return Ok("User deleted successfully.");
             }
-            return Ok("User deleted successfully.");
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

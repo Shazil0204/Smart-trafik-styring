@@ -9,48 +9,69 @@ namespace Smart_trafic_controller_api.Services
     public class UserService(IUserRepository userRepository) : IUserService
     {
         private readonly IUserRepository _userRepository = userRepository;
-        private readonly Hashing _hashing = new Hashing();
+        private readonly Hashing _hashing = new();
 
         public async Task<UserResponseDTO> CreateUserAsync(CreateUserRequestDTO requestDTO)
         {
-            bool userExists = await _userRepository.GetUserByUserNameAsync(requestDTO.UserName);
-            if (userExists)
+            try
             {
-                throw new Exception("User with the same username already exists.");
-            }
-            
-            requestDTO.Password = _hashing.HashString(requestDTO.Password);
+                User? userExists = await _userRepository.GetUserByUserNameAsync(requestDTO.UserName);
+                if (userExists != null)
+                {
+                    throw new Exception("User with the same username already exists.");
+                }
 
-            User user = UserMapper.ToEntity(requestDTO);
-            User createdUser = await _userRepository.CreateUserAsync(user) ?? throw new Exception("User could not be created.");
-            return UserMapper.ToResponseDTO(createdUser);
+                requestDTO.Password = _hashing.HashString(requestDTO.Password);
+
+                User user = UserMapper.ToEntity(requestDTO);
+                User createdUser = await _userRepository.CreateUserAsync(user) ?? throw new Exception("User could not be created.");
+                return UserMapper.ToResponseDTO(createdUser);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while creating the user.", ex);
+            }
         }
 
         public async Task<UserResponseDTO?> LoginUserAsync(UserLoginRequestDTO requestDTO)
         {
-            User? user = await _userRepository.LoginUserAsync(requestDTO.UserName, requestDTO.Password);
-            if (user == null)
+            try
             {
-                throw new Exception("Invalid username or password.");
+                User? user = await _userRepository.GetUserByUserNameAsync(requestDTO.UserName); 
+                
+                if (user == null || !_hashing.VerifyHash(requestDTO.Password, user.Password))
+                {
+                    throw new Exception("Invalid username or password.");
+                }
+                return UserMapper.ToResponseDTO(user);
             }
-
-            return UserMapper.ToResponseDTO(user);
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while logging in the user.", ex);
+            }
         }
 
         public async Task<bool> LogoutUserAsync(Guid userId)
         {
-            // Implement logout logic if needed (e.g., token invalidation)
+            // TODO: Implement logout logic if needed (e.g., token invalidation)
             return await Task.FromResult(true);
         }
 
         public async Task<bool> SoftDeleteUserAsync(Guid userId)
         {
-            bool result = await _userRepository.SoftDeleteUserAsync(userId);
-            if (!result)
+            try
             {
-                throw new Exception("User could not be deleted.");
+                bool result = await _userRepository.SoftDeleteUserAsync(userId);
+                if (!result)
+                {
+                    throw new Exception("User could not be deleted.");
+                }
+                return result;
             }
-            return result;
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while deleting the user.", ex);
+            }
         }
     }
 }

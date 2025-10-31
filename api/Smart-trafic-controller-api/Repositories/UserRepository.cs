@@ -27,33 +27,38 @@ namespace Smart_trafic_controller_api.Repositories
             }
         }
 
-        public async Task<bool> GetUserByUserNameAsync(string userName)
+        public async Task<User?> GetUserByUserNameAsync(string userName)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
-            return user != null;
-        }
-
-        public async Task<User?> LoginUserAsync(string userName, string password)
-        {
-            User? user = await _context.Users
-                .Where(u => u.UserName == userName && u.Password == password && !u.IsDeleted)
-                .FirstOrDefaultAsync();
-
-            return user;
+            try
+            {
+                User? user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving the user.", ex);
+            }
         }
 
         public async Task<bool> SoftDeleteUserAsync(Guid userId)
         {
-            User? user = await _context.Users.FindAsync(userId);
-            if (user == null || user.IsDeleted)
-            {
-                return false;
-            }
+            try
+            { 
+                User? user = await _context.Users.FindAsync(userId);
+                if (user == null || user.IsDeleted)
+                {
+                    throw new Exception("User does not exist or has already been deleted.");
+                }
 
-            user.SoftDelete();
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
-            return true;
+                user.SoftDelete();
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while deleting the user.", ex);
+            }
         }
     }
 }
