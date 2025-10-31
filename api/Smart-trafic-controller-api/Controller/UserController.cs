@@ -10,13 +10,9 @@ namespace Smart_trafic_controller_api.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UserController(IUserService userService) : ControllerBase
     {
-        private readonly IUserService _userService;
-        public UserController(IUserService userService)
-        {
-            _userService = userService;
-        }
+        private readonly IUserService _userService = userService;
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDTO requestDTO)

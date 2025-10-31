@@ -21,15 +21,22 @@ namespace Smart_trafic_controller_api.Services
                     throw new Exception("User with the same username already exists.");
                 }
 
+                string validationMessage = _hashing.IsPasswordValid(requestDTO.Password);
+                if (!string.IsNullOrEmpty(validationMessage))
+                {
+                    throw new Exception(validationMessage);
+                }
+                
                 requestDTO.Password = _hashing.HashString(requestDTO.Password);
 
                 User user = UserMapper.ToEntity(requestDTO);
-                User createdUser = await _userRepository.CreateUserAsync(user) ?? throw new Exception("User could not be created.");
+                User createdUser = await _userRepository.CreateUserAsync(user);
                 return UserMapper.ToResponseDTO(createdUser);
             }
-            catch (Exception ex)
+
+            catch (Exception)
             {
-                throw new Exception("An error occurred while creating the user.", ex);
+                throw;
             }
         }
 
@@ -45,9 +52,9 @@ namespace Smart_trafic_controller_api.Services
                 }
                 return UserMapper.ToResponseDTO(user);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception("An error occurred while logging in the user.", ex);
+                throw;
             }
         }
 
@@ -68,9 +75,9 @@ namespace Smart_trafic_controller_api.Services
                 }
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception("An error occurred while deleting the user.", ex);
+                throw;
             }
         }
     }
