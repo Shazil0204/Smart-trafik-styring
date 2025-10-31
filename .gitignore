@@ -248,4 +248,4 @@ mosquitto.log
 mosquitto.db
 
 # Config file for ardunio
-arduino/config.h
+arduino/Config.h
