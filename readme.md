@@ -1,6 +1,6 @@
 # Introduction
 
-Urban areas face growing challenges with traffic congestion, accidents, and delays in public transport. These issues reduce efficiency, increase pollution, and frustrate commuters.  
+Urban areas face growing challenges with traffic congestion and delays in public transport. These issues reduce efficiency, increase pollution, and frustrate commuters.  
 
 To address this, the city of **Ringsted** has deployed a network of IoT sensors that continuously collect data on vehicle movements and traffic flow.  
 
@@ -20,7 +20,7 @@ The Smart Traffic system integrates IoT devices, real-time messaging, backend se
 ---
 
 ## 1. Hardware Layer
-- **Arduino**: Collects sensor data such as vehicle counts, speed, and accident detection.
+- **Arduino**: Collects sensor data such as vehicle detection.
 - Publishes data via the **MQTT protocol** to the messaging system.
 
 ---
@@ -40,7 +40,7 @@ The Smart Traffic system integrates IoT devices, real-time messaging, backend se
 ---
 
 ## 4. Frontend
-- **Blazor (WebAssembly/Server)**:
+- **Blazor (Server)**:
   - Provides a dashboard for city planners.
   - Displays real-time traffic flow, alerts, and analytics.
   - Allows interaction with both live and stored data.
@@ -59,8 +59,7 @@ The Smart Traffic system integrates IoT devices, real-time messaging, backend se
   - Each component (API, Blazor frontend, Kafka, MariaDB) runs in isolated containers.
   - Ensures portability, scalability, and simplified deployment.
 
----
 
-## 🧩 System Diagram
+
 
 
