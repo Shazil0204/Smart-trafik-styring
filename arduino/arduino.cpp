@@ -25,6 +25,11 @@ void setup() {
   setupDepthSensor();
   setupWiFi();
   setupMQTT();
+  setupTrafficLightButton();
+}
+
+void setupTrafficLightButton() {
+  pinMode(TRAFFIC_LIGHT_BUTTON_PIN, INPUT_PULLUP);
 }
 
 void setupMQTT() {
@@ -70,6 +75,7 @@ void loop() {
     lastSensorRead = runTime;
   }
   handleWiFi(runTime);
+  handleButton();
 }
 
 void trafficLightController(unsigned long runTime) {
@@ -84,6 +90,16 @@ void trafficLightController(unsigned long runTime) {
     vehicleTrafficLight.setRedColor(); 
     client.publish("traffic/light", "VEHICLE_RED");
     didLastCheckDetectVehicle = false;
+  }
+}
+
+void handleButton() {
+  int buttonState = digitalRead(TRAFFIC_LIGHT_BUTTON_PIN);
+  if (buttonState == LOW) {  // pressed
+    Serial.println("Button pressed!");
+  }
+  else {
+    Serial.println("Button released!");
   }
 }
 
@@ -136,3 +152,4 @@ float calculateDistanceToVehicle() {
 
   return depth_sensor_dist_raw;
 }
+
