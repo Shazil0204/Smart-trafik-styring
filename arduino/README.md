@@ -26,7 +26,7 @@ TODO: Insert image.
 On the upper right side of the IDE, click the 3 dots (...) and select "new tab".<br>
 <img width="398" height="372" alt="image" src="https://github.com/user-attachments/assets/dd442551-ec4c-45ad-999b-318fb4e9933e" />
 
-In the text input, write the file names of the files located within this [repository directory](https://github.com/Shazil0204/Smart-trafik-styring/tree/main/arduino).
+In the text input, write the file names of all the *.h files located within this [repository directory](https://github.com/Shazil0204/Smart-trafik-styring/tree/main/arduino).
 For each of the files, copy and then paste the code from the repository, into your Arduino project.
 
 ## Configuration
