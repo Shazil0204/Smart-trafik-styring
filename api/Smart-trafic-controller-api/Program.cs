@@ -20,15 +20,15 @@ namespace Smart_trafic_controller_api
                 throw new Exception("DefaultConnection string is missing or not loaded!");
 
             builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseMySql(
-                    conn,
-                    ServerVersion.AutoDetect(conn)
-                ));
+                options.UseMySql(conn, ServerVersion.AutoDetect(conn))
+            );
 
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ITrafficEventService, TrafficEventService>();
             builder.Services.AddScoped<ITrafficEventRepository, TrafficEventRepository>();
+            builder.Services.AddScoped<ISensorLogService, SensorlogService>();
+            builder.Services.AddScoped<ISensorLogRepository, SensorLogRepository>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -41,26 +41,37 @@ namespace Smart_trafic_controller_api
                 jwtSecretKey = "This-is-my-very-long-random-secret-key-379";
             }
 
-            builder.Services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
+            builder
+                .Services.AddAuthentication("Bearer")
+                .AddJwtBearer(
+                    "Bearer",
+                    options =>
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = builder.Configuration["JwtSettings:Issuer"] ?? "smart trafic controller api",
-                        ValidAudience = builder.Configuration["JwtSettings:Audience"] ?? "smart trafic controller api users",
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(jwtSecretKey))
-                    };
-                });
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer =
+                                builder.Configuration["JwtSettings:Issuer"]
+                                ?? "smart trafic controller api",
+                            ValidAudience =
+                                builder.Configuration["JwtSettings:Audience"]
+                                ?? "smart trafic controller api users",
+                            IssuerSigningKey = new SymmetricSecurityKey(
+                                Encoding.UTF8.GetBytes(jwtSecretKey)
+                            ),
+                        };
+                    }
+                );
 
-            builder.Services.AddControllers().AddNewtonsoftJson(Options =>
-            {
-                Options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });
+            builder
+                .Services.AddControllers()
+                .AddNewtonsoftJson(Options =>
+                {
+                    Options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
 
             var app = builder.Build();
 
