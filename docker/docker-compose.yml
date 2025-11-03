@@ -46,8 +46,8 @@ services:
       - smart_traffic_network
   api:
     build:
-      context: ../api/Smart-trafic-controller-api
-      dockerfile: ../../docker/Dockerfile.api
+      context: ..
+      dockerfile: docker/Dockerfile.api
     container_name: smart_traffic_api
     working_dir: /app
     volumes:
