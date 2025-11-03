@@ -6,6 +6,7 @@ using Smart_trafic_controller_api.Data;
 using Smart_trafic_controller_api.Interfaces;
 using Smart_trafic_controller_api.Repositories;
 using Smart_trafic_controller_api.Services;
+using Smart_trafic_controller_api.BackgroundServices;
 
 namespace Smart_trafic_controller_api
 {
@@ -29,6 +30,12 @@ namespace Smart_trafic_controller_api
                 builder.Services.AddScoped<ITrafficEventRepository, TrafficEventRepository>();
                 builder.Services.AddScoped<ISensorLogService, SensorlogService>();
                 builder.Services.AddScoped<ISensorLogRepository, SensorLogRepository>();
+
+                builder.Services.AddHostedService<MqttSubscriberBackgroundService>();
+
+                builder.Logging.ClearProviders();
+                builder.Logging.AddConsole();
+                builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Information);
 
                 builder.Services.AddControllers();
                 builder.Services.AddEndpointsApiExplorer();
