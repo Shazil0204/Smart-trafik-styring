@@ -5,7 +5,7 @@
 - 1x [Arduino UNO R4 WiFi](https://docs.arduino.cc/hardware/uno-r4-wifi) with USB cable to connect to your computer
 - 1x [HC-SR04 distance sensor](https://projecthub.arduino.cc/Isaac100/getting-started-with-the-hc-sr04-ultrasonic-sensor-7cabe1)
 - 2x [RGB LEDs](https://projecthub.arduino.cc/semsemharaz/interfacing-rgb-led-with-arduino-b59902)
-- 14x jumper cables
+- 16x jumper cables
 
 ## The wiring
 
