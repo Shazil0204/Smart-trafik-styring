@@ -39,6 +39,6 @@ class MQTT {
     public:
       void publishMessage(const char* message) {
         const char* topic = "traffic/light";
-
+        client.publish(topic, message);
       }
 };
