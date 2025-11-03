@@ -62,7 +62,7 @@ This file will contain your own configurations, such as Wi-Fi credentials.<br> I
 
 ## Install and enable libraries dependencies
 
-Inside the Arduino IDE, click the books on the left side.
+Inside the Arduino IDE, click the books on the left side. <br>
 <img width="404" height="523" alt="image" src="https://github.com/user-attachments/assets/78c84110-6045-481f-ab28-4183f43c8202" />
 
 Search for PubSubClient and install.
