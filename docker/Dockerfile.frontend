@@ -1,0 +1,16 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0
+
+WORKDIR /app
+
+ENV DOTNET_USE_POLLING_FILE_WATCHER=1 \
+    DOTNET_RUNNING_IN_CONTAINER=true \
+    ASPNETCORE_URLS=http://0.0.0.0:5212
+
+RUN apt-get update && apt-get install -y unzip curl && rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /vsdbg && \
+    curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg
+
+EXPOSE 5212 5678
+
+# Run the frontend project inside /app (host mounts project into /app)
+CMD ["dotnet", "watch", "run", "--project", "SmartTraficControlSystem.csproj", "--urls", "http://0.0.0.0:5212"]

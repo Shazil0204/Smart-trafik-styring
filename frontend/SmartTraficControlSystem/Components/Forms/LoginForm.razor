@@ -1,10 +1,14 @@
 @using System.ComponentModel.DataAnnotations
-<MudForm @ref="form" @bind-IsValid="success" @bind-Errors="errors" Class="w-100">
-    <MudTextField T="string" Label="User name" For="@(() => username)" Required="true" InputType="InputType.Text"
-        RequiredError="User name is required." Class="mb-3" />
+@using SmartTraficControlSystem.Components.Services
+@using SmartTraficControlSystem.Utilities.Models
+@inject AccountService AccountService
 
-    <MudTextField T="string" Label="Password" For="@(() => password)" InputType="InputType.Password" Required="true"
-        RequiredError="Password is required." Class="mb-4" />
+<MudForm @ref="form" @bind-IsValid="success" @bind-Errors="errors" Class="w-100">
+    <MudTextField T="string" Label="User name" For="@(() => account.Username)" Required="true"
+        InputType="InputType.Text" RequiredError="User name is required." Class="mb-3" />
+
+    <MudTextField T="string" Label="Password" For="@(() => account.Password)" InputType="InputType.Password"
+        Required="true" RequiredError="Password is required." Class="mb-4" />
 
     <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="w-100 mb-2" OnClick="Login">
         Login
@@ -23,13 +27,15 @@
     [Parameter] public EventCallback<bool> HasAccount { get; set; }
     [Parameter] public EventCallback OnLoginSuccess { get; set; }
 
-
+    private AccountModel account = new AccountModel()
+    {
+        Username = string.Empty,
+        Password = string.Empty
+    };
     private MudForm form;
     private bool success;
     private string[] errors = Array.Empty<string>();
 
-    private string username;
-    private string password;
 
     private async Task Login()
     {
@@ -37,7 +43,15 @@
         if (!success)
             return;
 
-        // TODO: Handle login logic here
+        var loginSuccess = await AccountService.LoginAsync(account);
+        if (loginSuccess)
+        {
+            await OnLoginSuccess.InvokeAsync();
+        }
+        else
+        {
+            errors = new[] { "Invalid username or password." };
+        }
     }
 
     private async Task Register()

@@ -13,8 +13,6 @@ namespace Smart_trafic_controller_api
     {
         public static void Main(string[] args)
         {
-            try
-            {
                 var builder = WebApplication.CreateBuilder(args);
 
                 string? conn = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -87,7 +85,8 @@ namespace Smart_trafic_controller_api
                 app.UseHttpsRedirection();
                 app.UseAuthorization();
                 app.MapControllers();
-
+            try
+            {
                 app.Run();
             }
             catch (Exception ex)
