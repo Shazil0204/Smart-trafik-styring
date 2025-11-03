@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Smart_trafic_controller_api.DTOs.SensorLog;
-using Smart_trafic_controller_api.Entities;
 using Smart_trafic_controller_api.Interfaces;
-using Smart_trafic_controller_api.Services;
 
 namespace Smart_trafic_controller_api.Controller
 {
