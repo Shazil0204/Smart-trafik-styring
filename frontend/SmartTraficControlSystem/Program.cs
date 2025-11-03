@@ -1,5 +1,6 @@
 using SmartTraficControlSystem.Components;
 using MudBlazor.Services;
+using SmartTraficControlSystem.Components.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
+// Register API HttpClient and application services
+builder.Services.AddHttpClient("SmartTraficControlSystemAPI", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5010");
+});
+builder.Services.AddScoped<AccountService>();
 
 var app = builder.Build();
 

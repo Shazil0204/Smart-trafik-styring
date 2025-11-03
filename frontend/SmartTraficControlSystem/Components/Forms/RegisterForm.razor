@@ -1,7 +1,8 @@
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
-
-
+@using SmartTraficControlSystem.Components.Services
+@using SmartTraficControlSystem.Utilities.Models
+@inject AccountService AccountService
 <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" Class="w-100">
     <MudTextField T="string" Label="User name" Required="true" InputType="InputType.Text"
         RequiredError="User name is required." OnlyValidateIfDirty Clearable Class="mb-3" />
@@ -28,7 +29,10 @@
 @code {
     [Parameter] public EventCallback<bool> HasAccount { get; set; }
     [Parameter] public EventCallback OnRegisterRequested { get; set; }
-
+    private AccountModel account = new AccountModel(){
+        Username = string.Empty,
+        Password = string.Empty
+    };
     bool success;
     MudForm form;
     string[] errors = { };
@@ -55,7 +59,15 @@
 
         if (form.IsValid)
         {
-
+            var success = await AccountService.RegisterAsync(account);
+            if (success)
+            {
+                // Handle successful registration (e.g., show a success message, redirect, etc.)
+            }
+            else
+            {
+                // Handle failed registration (e.g., show an error message)
+            }
         }
     }
 
