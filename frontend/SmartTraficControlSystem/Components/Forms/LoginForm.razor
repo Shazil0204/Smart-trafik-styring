@@ -1,0 +1,47 @@
+@using System.ComponentModel.DataAnnotations
+<MudForm @ref="form" @bind-IsValid="success" @bind-Errors="errors" Class="w-100">
+    <MudTextField T="string" Label="User name" For="@(() => username)" Required="true" InputType="InputType.Text"
+        RequiredError="User name is required." Class="mb-3" />
+
+    <MudTextField T="string" Label="Password" For="@(() => password)" InputType="InputType.Password" Required="true"
+        RequiredError="Password is required." Class="mb-4" />
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="w-100 mb-2" OnClick="Login">
+        Login
+    </MudButton>
+
+    <MudText Class="mt-2 text-center">
+        Don't have an account?
+        <MudButton Variant="Variant.Text" Color="Color.Secondary" Class="ml-1" OnClick="Register">
+            Register
+        </MudButton>
+    </MudText>
+</MudForm>
+
+
+@code {
+    [Parameter] public EventCallback<bool> HasAccount { get; set; }
+    [Parameter] public EventCallback OnLoginSuccess { get; set; }
+
+
+    private MudForm form;
+    private bool success;
+    private string[] errors = Array.Empty<string>();
+
+    private string username;
+    private string password;
+
+    private async Task Login()
+    {
+        await form.Validate();
+        if (!success)
+            return;
+
+        // TODO: Handle login logic here
+    }
+
+    private async Task Register()
+    {
+        await HasAccount.InvokeAsync(false);
+    }
+}

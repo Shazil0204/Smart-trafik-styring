@@ -242,4 +242,10 @@ Migrations
 
 # Production appsettings
 appsettings.json
-```
+
+# Ignore mosquitto data files
+mosquitto.log
+mosquitto.db
+
+# Config file for ardunio
+arduino/Config.h
