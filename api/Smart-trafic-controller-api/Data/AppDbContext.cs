@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Smart_trafic_controller_api.Entities;
-using Smart_trafic_controller_api.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Smart_trafic_controller_api.Data

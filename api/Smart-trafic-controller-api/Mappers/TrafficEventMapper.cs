@@ -1,4 +1,3 @@
-using System;
 using Smart_trafic_controller_api.DTOs.TrafficEvent;
 using Smart_trafic_controller_api.Entities;
 using Smart_trafic_controller_api.Enums;

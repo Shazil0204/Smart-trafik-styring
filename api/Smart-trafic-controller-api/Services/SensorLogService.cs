@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Smart_trafic_controller_api.DTOs.SensorLog;
 using Smart_trafic_controller_api.Entities;
-using Smart_trafic_controller_api.Enums;
 using Smart_trafic_controller_api.Interfaces;
 using Smart_trafic_controller_api.Mappers;
-using Smart_trafic_controller_api.Repositories;
 
 namespace Smart_trafic_controller_api.Services
 {
