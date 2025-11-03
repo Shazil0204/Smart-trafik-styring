@@ -20,7 +20,8 @@ namespace Smart_trafic_controller_api.Data
         public DbSet<SensorLog> SensorLogs { get; set; }
         public DbSet<TrafficEvent> TrafficEvents { get; set; }
 
-        // This acts as a trigger, so whenever savechanges is used it well be logged in AuditLog
+        // Overrides SaveChangesAsync to automatically log all create, update, and delete operations
+        // into the AuditLogs table. Acts as a lightweight auditing trigger for tracked entities.
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var entries = ChangeTracker.Entries()
@@ -37,7 +38,6 @@ namespace Smart_trafic_controller_api.Data
                 var primaryKeyProp = entry.Properties.FirstOrDefault(p => p.Metadata.IsPrimaryKey());
                 var entityId = primaryKeyProp?.CurrentValue?.ToString() ?? "Unknown";
 
-                // Switch satement using lambda
                 string operationType = entry.State switch
                 {
                     EntityState.Added => "CREATE",
@@ -49,8 +49,12 @@ namespace Smart_trafic_controller_api.Data
                 auditLogs.Add(new AuditLog(operationType, entityName, entityId));
             }
 
+            // Save the main entity changes first. This ensures any generated keys (e.g., IDs)
+            // are available before logging the operations.
+            // 'var' is used because the return type may differ based on the context.
             var result = await base.SaveChangesAsync(cancellationToken);
 
+            // If there are audit logs to record, add them and save separately.
             if (auditLogs.Count > 0)
             {
                 AuditLogs.AddRange(auditLogs);
@@ -59,7 +63,6 @@ namespace Smart_trafic_controller_api.Data
 
             return result;
         }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
