@@ -4,8 +4,8 @@
 
 - 1x [Arduino UNO R4 WiFi](https://docs.arduino.cc/hardware/uno-r4-wifi) with USB cable to connect to your computer
 - 1x [HC-SR04 distance sensor](https://projecthub.arduino.cc/Isaac100/getting-started-with-the-hc-sr04-ultrasonic-sensor-7cabe1)
-- 12x jumper cables
 - 2x [RGB LEDs](https://projecthub.arduino.cc/semsemharaz/interfacing-rgb-led-with-arduino-b59902)
+- 12x jumper cables
 
 ## The wiring
 
@@ -23,7 +23,6 @@ You will then be prompted to install additional drivers. Install those as well.
 In the IDE, select your Arduino by clicking the dropdown.
 Choose the Arduino R4 UNO WiFi<br>
 <img width="549" height="135" alt="image" src="https://github.com/user-attachments/assets/293b4f7e-3c51-45d3-86ad-da152a2d3911" />
-
 
 ## Create the files and write the code
 
@@ -63,7 +62,14 @@ This file will contain your own configurations, such as Wi-Fi credentials.<br> I
 
 ## Install and enable libraries dependencies
 
-TODO: install and enable "WiFiS3" and "PubSubClient".
+Inside the Arduino IDE, click the books on the left side.
+<img width="404" height="523" alt="image" src="https://github.com/user-attachments/assets/78c84110-6045-481f-ab28-4183f43c8202" />
+
+Search for PubSubClient and install.
+This library will handle MQTT communication.
+
+In addition, we will be using WiFiS3 to handle wireless networking.
+This library is already installed on the Arduino UNO R4 WiFi, so there is no need to install it.
 
 ## Upload the code
 
