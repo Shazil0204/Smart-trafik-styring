@@ -2,7 +2,7 @@ services:
   mariadb:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.mariadb
     container_name: smart_traffic_mariadb
     restart: unless-stopped
     environment:
@@ -42,6 +42,55 @@ services:
       - ./config:/mosquitto/config
       - ./data:/mosquitto/data
       - ./log:/mosquitto/log
+    networks:
+      - smart_traffic_network
+  api:
+    build:
+      context: ../api/Smart-trafic-controller-api
+      dockerfile: ../../docker/Dockerfile.api
+    container_name: smart_traffic_api
+    working_dir: /app
+    volumes:
+      - ../api/Smart-trafic-controller-api:/app:cached
+    ports:
+      - '5010:5010' # API port (host:container)
+      - '5678:5678' # Debug port
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
+      - ASPNETCORE_URLS=http://0.0.0.0:5010
+      - ConnectionStrings__DefaultConnection=Server=mariadb;Port=3306;Database=smart_traffic;User=traffic_user;Password=traffic_password;CharSet=utf8mb4;
+    networks:
+      - smart_traffic_network
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+      - mosquitto
+  frontend:
+    build:
+      context: ../frontend/SmartTraficControlSystem
+      dockerfile: ../../docker/Dockerfile.frontend
+    container_name: smart_traffic_frontend
+    working_dir: /app
+    volumes:
+      - ../frontend/SmartTraficControlSystem:/app:cached
+    ports:
+      - '5212:5212' # Frontend port (host:container)
+      - '5679:5678' # Debug port mapped to a different host port to avoid collision
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
+    networks:
+      - smart_traffic_network
+    restart: unless-stopped
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    restart: unless-stopped
     networks:
       - smart_traffic_network
 
