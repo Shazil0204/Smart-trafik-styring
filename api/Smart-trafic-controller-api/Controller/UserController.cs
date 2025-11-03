@@ -31,7 +31,6 @@ namespace Smart_trafic_controller_api.Controller
             }
         }
 
-
         [HttpPost("login")]
         public async Task<IActionResult> LoginUser([FromBody] UserLoginRequestDTO requestDTO)
         {

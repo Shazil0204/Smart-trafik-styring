@@ -26,7 +26,7 @@ namespace Smart_trafic_controller_api.Services
                 {
                     throw new Exception(validationMessage);
                 }
-                
+
                 requestDTO.Password = _hashing.HashString(requestDTO.Password);
 
                 User user = UserMapper.ToEntity(requestDTO);
@@ -44,12 +44,14 @@ namespace Smart_trafic_controller_api.Services
         {
             try
             {
-                User? user = await _userRepository.GetUserByUserNameAsync(requestDTO.UserName); 
-                
+                User? user = await _userRepository.GetUserByUserNameAsync(requestDTO.UserName);
+
                 if (user == null || !_hashing.VerifyHash(requestDTO.Password, user.Password))
                 {
                     throw new Exception("Invalid username or password.");
                 }
+                
+                // Additional login logic can be added here (e.g., generating tokens)
                 return UserMapper.ToResponseDTO(user);
             }
             catch (Exception)

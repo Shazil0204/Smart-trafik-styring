@@ -13,7 +13,7 @@ namespace Smart_trafic_controller_api.Utilities
             _config = config;
         }
 
-        public string GenerateToken(Guid userId, string email)
+        public string GenerateToken(Guid userId)
         {
             string role = "User";
             IConfigurationSection? jwtSettings = _config.GetSection("JwtSettings");
@@ -25,7 +25,6 @@ namespace Smart_trafic_controller_api.Utilities
             Claim[]? claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, email),
                 new Claim(ClaimTypes.Role, role.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
