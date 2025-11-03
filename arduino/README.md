@@ -5,11 +5,11 @@
 - 1x [Arduino UNO R4 WiFi](https://docs.arduino.cc/hardware/uno-r4-wifi) with USB cable to connect to your computer
 - 1x [HC-SR04 distance sensor](https://projecthub.arduino.cc/Isaac100/getting-started-with-the-hc-sr04-ultrasonic-sensor-7cabe1)
 - 2x [RGB LEDs](https://projecthub.arduino.cc/semsemharaz/interfacing-rgb-led-with-arduino-b59902)
-- 12x jumper cables
+- 14x jumper cables
 
 ## The wiring
 
-TODO: Show the wiring from the Arduino to the breadboard, to the sensors. Just take a picture of it.
+<img width="773" height="642" alt="image" src="https://github.com/user-attachments/assets/24b383c6-ff7f-4b69-bc4a-f5280b73ed58" />
 
 ## Install Arduino IDE
 
