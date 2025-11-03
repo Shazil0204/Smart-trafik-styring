@@ -18,7 +18,7 @@ namespace Smart_trafic_controller_api.Repositories
             try
             {
                 List<SensorLog> sensorLogs = await _context.SensorLogs.ToListAsync();
-                if (sensorLogs == null || !sensorLogs.Any())
+                if (sensorLogs == null || sensorLogs.Count == 0)
                 {
                     return new List<SensorLog>();
                 }
@@ -40,7 +40,7 @@ namespace Smart_trafic_controller_api.Repositories
                 List<SensorLog> sensorLogs = await _context
                     .SensorLogs.Where(sl => sl.Timestamp >= startTime && sl.Timestamp <= endTime)
                     .ToListAsync();
-                if (sensorLogs == null || !sensorLogs.Any())
+                if (sensorLogs == null || sensorLogs.Count == 0)
                 {
                     return new List<SensorLog>();
                 }

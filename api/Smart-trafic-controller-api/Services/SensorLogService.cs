@@ -11,9 +11,10 @@ using Smart_trafic_controller_api.Repositories;
 
 namespace Smart_trafic_controller_api.Services
 {
-    public class SensorlogService(ISensorLogRepository sensorLogRepository) : ISensorLogService
+    public class SensorlogService(ISensorLogRepository sensorLogRepository, ITrafficEventService trafficEventService) : ISensorLogService
     {
         private readonly ISensorLogRepository _sensorLogRepository = sensorLogRepository;
+        private readonly ITrafficEventService _trafficEventService = trafficEventService;
 
         public async Task<List<SensorLogResponseDTO>> GetAllSensorLogsAsync()
         {
@@ -21,7 +22,7 @@ namespace Smart_trafic_controller_api.Services
             {
                 List<SensorLog> sensorLogs = await _sensorLogRepository.GetAllSensorLogsAsync();
 
-                if (sensorLogs == null || !sensorLogs.Any())
+                if (sensorLogs == null || sensorLogs.Count == 0)
                 {
                     return new List<SensorLogResponseDTO>();
                 }
@@ -43,7 +44,7 @@ namespace Smart_trafic_controller_api.Services
                 List<SensorLog> sensorLogs =
                     await _sensorLogRepository.GetSensorLogsByTimeRangeAsync(startTime, endTime);
 
-                if (sensorLogs == null || !sensorLogs.Any())
+                if (sensorLogs == null || sensorLogs.Count == 0)
                 {
                     return new List<SensorLogResponseDTO>();
                 }

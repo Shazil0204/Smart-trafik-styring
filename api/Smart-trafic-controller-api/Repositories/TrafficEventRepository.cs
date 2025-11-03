@@ -18,7 +18,7 @@ namespace Smart_trafic_controller_api.Repositories
             try
             {
                 List<TrafficEvent> trafficEvents = await _context.TrafficEvents.ToListAsync();
-                if (trafficEvents == null || !trafficEvents.Any())
+                if (trafficEvents == null || trafficEvents.Count == 0)
                 {
                     return new List<TrafficEvent>();
                 }
@@ -37,7 +37,7 @@ namespace Smart_trafic_controller_api.Repositories
                 List<TrafficEvent> trafficEvents = await _context.TrafficEvents
                     .Where(te => te.TimeStamp >= startTime && te.TimeStamp <= endTime)
                     .ToListAsync();
-                if (trafficEvents == null || !trafficEvents.Any())
+                if (trafficEvents == null || trafficEvents.Count == 0)
                 {
                     return new List<TrafficEvent>();
                 }

@@ -19,7 +19,7 @@ namespace Smart_trafic_controller_api.Controller
             {
                 List<SensorLogResponseDTO> sensorLogs =
                     await _sensorLogService.GetAllSensorLogsAsync();
-                if (sensorLogs == null || !sensorLogs.Any())
+                if (sensorLogs == null || sensorLogs.Count == 0)
                 {
                     return NotFound("No sensor logs found.");
                 }
@@ -41,7 +41,7 @@ namespace Smart_trafic_controller_api.Controller
             {
                 List<SensorLogResponseDTO> sensorLogs =
                     await _sensorLogService.GetSensorLogsByTimeRangeAsync(startTime, endTime);
-                if (sensorLogs == null || !sensorLogs.Any())
+                if (sensorLogs == null || sensorLogs.Count == 0)
                 {
                     return NotFound("No sensor logs found in the specified time range.");
                 }

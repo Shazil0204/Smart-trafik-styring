@@ -31,7 +31,7 @@ namespace Smart_trafic_controller_api.Services
             try
             {
                 List<TrafficEvent> trafficEvents = await  _trafficEventRepository.GetAllTrafficEventsAsync();
-                if (trafficEvents == null || !trafficEvents.Any())
+                if (trafficEvents == null || trafficEvents.Count == 0)
                 {
                     return new List<TrafficEventResponseDTO>();
                 }
@@ -52,7 +52,7 @@ namespace Smart_trafic_controller_api.Services
                     throw new ArgumentException("Start time must be earlier than end time.");
                 }
                 List<TrafficEvent> trafficEvents = await _trafficEventRepository.GetTrafficEventsByTimeRangeAsync(startTime, endTime);
-                if (trafficEvents == null || !trafficEvents.Any())
+                if (trafficEvents == null || trafficEvents.Count == 0)
                 {
                     return new List<TrafficEventResponseDTO>();
                 }
