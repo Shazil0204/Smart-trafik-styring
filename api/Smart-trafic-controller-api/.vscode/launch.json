@@ -20,6 +20,23 @@
       "sourceFileMap": {
         "/Views": "${workspaceFolder}/Views"
       }
+    },
+    {
+      "name": "Docker: Attach to .NET Core",
+      "type": "coreclr",
+      "request": "attach",
+      "processName": "TrafficAPI",
+      "sourceFileMap": {
+        "/app": "${workspaceFolder}"
+      },
+      "pipeTransport": {
+        "pipeProgram": "docker",
+        "pipeArgs": ["exec", "-i", "smart_traffic_api"],
+        "debuggerPath": "/vsdbg/vsdbg",
+        "pipeCwd": "${workspaceFolder}",
+        "quoteArgs": false
+      },
+      "args": ["--interpreter=vscode"]
     }
   ]
 }

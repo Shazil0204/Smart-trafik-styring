@@ -14,7 +14,7 @@
       },
       "pipeTransport": {
         "pipeProgram": "docker",
-        "pipeArgs": ["exec", "-i", "reelixdocker-dev-api-1"], // TODO: Change this
+        "pipeArgs": ["exec", "-i", "smart_traffic_frontend"],
         "debuggerPath": "/vsdbg/vsdbg",
         "pipeCwd": "${workspaceFolder}",
         "quoteArgs": false

@@ -1,6 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 
-# The compose volume mounts ReelixApi to /app, so all paths are relative to /app
 WORKDIR /app
 
 ENV DOTNET_USE_POLLING_FILE_WATCHER=1 \
@@ -14,4 +13,4 @@ RUN apt-get update && apt-get install -y unzip curl && rm -rf /var/lib/apt/lists
 EXPOSE 5010 5678
 
 # Run the API project inside /app (host mounts project into /app)
-CMD ["dotnet", "watch", "run", "--project", "Smart-trafic-controller-api.csproj"]
+CMD ["dotnet", "watch", "run", "--project", "Smart-trafic-controller-api.csproj", "--urls", "http://0.0.0.0:5010"]

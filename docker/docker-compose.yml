@@ -58,7 +58,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
-      - ASPNETCORE_URLS=http://0.0.0.0:5010
       - ConnectionStrings__DefaultConnection=Server=mariadb;Port=3306;Database=smart_traffic;User=traffic_user;Password=traffic_password;CharSet=utf8mb4;
     networks:
       - smart_traffic_network
