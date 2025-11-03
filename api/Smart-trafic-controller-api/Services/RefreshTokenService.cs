@@ -29,7 +29,7 @@ namespace Smart_trafic_controller_api.Services
 
             RefreshTokenValueObject refreshTokenValue = RefreshTokenValueObject.Create();
 
-            int refreshTokenDays = int.Parse(_config["JwtSettings:RefreshTokenExpirationDays"] ?? "1");
+            int refreshTokenDays = int.Parse(_config["JwtSettings:RefreshTokenDays"] ?? "1");
 
             DateTime refreshTokenExpiry = DateTime.UtcNow.AddDays(refreshTokenDays);
             RefreshToken refreshTokenEntity = new RefreshToken(user.Id, refreshTokenValue, refreshTokenExpiry);
@@ -38,6 +38,74 @@ namespace Smart_trafic_controller_api.Services
             await _refreshTokenRepository.SaveChangesAsync();
 
             return (jwt, refreshTokenValue);
+        }
+
+        public async Task<(string Jwt, RefreshTokenValueObject RefreshToken)> RefreshTokenAsync(string refreshToken, Guid? userId = null)
+        {
+            RefreshToken? existingToken;
+
+            if (userId.HasValue)
+            {
+                // Much faster - only check tokens for this user
+                existingToken = await _refreshTokenRepository.GetByTokenHashAndUserIdAsync(refreshToken, userId.Value);
+            }
+            else
+            {
+                // Fallback to checking all tokens (slower)
+                existingToken = await _refreshTokenRepository.GetByTokenHashAsync(refreshToken);
+            }
+
+            if (existingToken == null || !existingToken.IsActive)
+            {
+                throw new Exception("Invalid refresh token.");
+            }
+
+            // Generate new JWT
+            string jwt = _jwtTokenGenerator.GenerateToken(existingToken.UserId);
+
+            // Always generate new refresh token for security (token rotation)
+            RefreshTokenValueObject newRefreshToken = RefreshTokenValueObject.Create();
+
+            int refreshTokenDays = int.Parse(_config["JwtSettings:RefreshTokenDays"] ?? "1");
+            DateTime refreshTokenExpiry = DateTime.UtcNow.AddDays(refreshTokenDays);
+            RefreshToken newRefreshTokenEntity = new(existingToken.UserId, newRefreshToken, refreshTokenExpiry);
+
+            // Revoke old token and save new one
+            existingToken.Revoke();
+
+            await _refreshTokenRepository.UpdateAsync(existingToken);
+            await _refreshTokenRepository.AddAsync(newRefreshTokenEntity);
+            await _refreshTokenRepository.SaveChangesAsync();
+
+            return (jwt, newRefreshToken);
+        }
+
+        public async Task<bool> LogoutAsync(string refreshToken, Guid? userId = null)
+        {
+            RefreshToken? existingToken;
+
+            if (userId.HasValue)
+            {
+                // Much faster - only check tokens for this user
+                existingToken = await _refreshTokenRepository.GetByTokenHashAndUserIdAsync(refreshToken, userId.Value);
+            }
+            else
+            {
+                // Fallback to checking all tokens (slower)
+                existingToken = await _refreshTokenRepository.GetByTokenHashAsync(refreshToken);
+            }
+
+            if (existingToken == null || !existingToken.IsActive)
+            {
+                throw new Exception("Invalid refresh token.");
+            }
+
+            existingToken.Revoke();
+
+            await _refreshTokenRepository.UpdateAsync(existingToken);
+            await _refreshTokenRepository.SaveChangesAsync();
+
+            return true;
         }
     }
 }

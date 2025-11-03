@@ -10,6 +10,8 @@ namespace Smart_trafic_controller_api.Interfaces
     {
         Task AddAsync(RefreshToken refreshToken);
         Task<RefreshToken?> GetByTokenHashAsync(string tokenHash);
+        Task<RefreshToken?> GetByTokenHashAndUserIdAsync(string rawToken, Guid userId);
+        Task UpdateAsync(RefreshToken refreshToken);
         Task SaveChangesAsync();
     }
 }
