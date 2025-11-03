@@ -1,26 +1,27 @@
 class DistanceSensor {
-  int transmitPin;
+  int triggerPin;
   int echoPin;
 
   public:
-    DistanceSensor(int transmitPin, int echoPin) {
-      this->transmitPin = transmitPin;
+    DistanceSensor(int triggerPin, int echoPin) {
+      this->triggerPin = triggerPin;
       this->echoPin = echoPin;
+
+      pinMode(triggerPin, OUTPUT);
+      pinMode(echoPin, INPUT);
     }
 
   public:
     float calculateDistanceToObject() {
-      unsigned long duration;
-
       // Trigger ultrasonic pulse
-      digitalWrite(transmitPin, LOW);
+      digitalWrite(triggerPin, LOW);
       delayMicroseconds(5);
-      digitalWrite(transmitPin, HIGH);
+      digitalWrite(triggerPin, HIGH);
       delayMicroseconds(10);
-      digitalWrite(transmitPin, LOW);
+      digitalWrite(triggerPin, LOW);
 
       // Listen for echo with timeout (30 ms)
-      duration = pulseIn(echoPin, HIGH, 30000);
+      unsigned long duration = pulseIn(echoPin, HIGH, 30000);
 
       // Convert to cm
       float rawDistance = (duration * 0.034) / 2.0;
@@ -30,5 +31,5 @@ class DistanceSensor {
       Serial.println(" cm");
 
       return rawDistance;
-    }
+    }  
 };
