@@ -20,7 +20,7 @@ namespace Smart_trafic_controller_api.Repositories
                 List<TrafficEvent> trafficEvents = await _context.TrafficEvents.ToListAsync();
                 if (trafficEvents == null || !trafficEvents.Any())
                 {
-                    return null;
+                    return new List<TrafficEvent>();
                 }
                 return trafficEvents;
             }
@@ -39,7 +39,7 @@ namespace Smart_trafic_controller_api.Repositories
                     .ToListAsync();
                 if (trafficEvents == null || !trafficEvents.Any())
                 {
-                    return null;
+                    return new List<TrafficEvent>();
                 }
                 return trafficEvents;
             }

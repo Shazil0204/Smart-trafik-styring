@@ -33,7 +33,7 @@ namespace Smart_trafic_controller_api.Services
                 List<TrafficEvent> trafficEvents = await  _trafficEventRepository.GetAllTrafficEventsAsync();
                 if (trafficEvents == null || !trafficEvents.Any())
                 {
-                    return null;
+                    return new List<TrafficEventResponseDTO>();
                 }
                 return TrafficEventMapper.ToResponseListDTO(trafficEvents);
             }
@@ -54,7 +54,7 @@ namespace Smart_trafic_controller_api.Services
                 List<TrafficEvent> trafficEvents = await _trafficEventRepository.GetTrafficEventsByTimeRangeAsync(startTime, endTime);
                 if (trafficEvents == null || !trafficEvents.Any())
                 {
-                    return null;
+                    return new List<TrafficEventResponseDTO>();
                 }
                 return TrafficEventMapper.ToResponseListDTO(trafficEvents);
             }
