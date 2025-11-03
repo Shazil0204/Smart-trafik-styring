@@ -21,8 +21,9 @@ You will then be prompted to install additional drivers. Install those as well.
 ## Select your Arduino
 
 In the IDE, select your Arduino by clicking the dropdown.
-Choose the Arduino R4 UNO WiFi
-TODO: Insert image.
+Choose the Arduino R4 UNO WiFi<br>
+<img width="549" height="135" alt="image" src="https://github.com/user-attachments/assets/293b4f7e-3c51-45d3-86ad-da152a2d3911" />
+
 
 ## Create the files and write the code
 
