@@ -71,12 +71,19 @@ namespace Smart_trafic_controller_api.Services
                         "Sensor log cannot be null."
                     );
                 }
-                if (createSensorLogDTO.SensorType == null || string.IsNullOrEmpty(createSensorLogDTO.SensorValue))
+                if (string.IsNullOrEmpty(createSensorLogDTO.SensorValue))
                 {
                     throw new ArgumentException(
                         "Sensor type and sensor value cannot be null or empty."
                     );
                 }
+
+                // TODO:
+                // SensorLog analyze to create trafficevent 
+                // if (createSensorLogDTO.SensorType == SensorType.Pedestrian)
+                // {
+                    
+                // }
 
                 SensorLog createdSensorLog = await _sensorLogRepository.CreateSensorLogAsync(
                     SensorLogMapper.ToEntity(createSensorLogDTO)
