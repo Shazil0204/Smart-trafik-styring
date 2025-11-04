@@ -15,10 +15,17 @@ EXPOSE 5010 5678
 ENV PATH="$PATH:/root/.dotnet/tools"
 RUN dotnet tool install --global dotnet-ef --version 8.0.0
 
-# Copy and use an entrypoint script that runs migrations before starting the app.
-# The build context will include the repository root so we can copy the script from the
-# docker/ folder.
-COPY docker/api-entrypoint.sh /api-entrypoint.sh
-RUN chmod +x /api-entrypoint.sh
+# Copy API project into the image so dotnet commands and migrations can run inside the container
+# We copy the Smart-trafic-controller-api folder (relative to build context) into /app
+COPY api/Smart-trafic-controller-api /app/Smart-trafic-controller-api
 
-ENTRYPOINT ["/api-entrypoint.sh"]
+# Restore packages for faster startup (done at build time)
+RUN dotnet restore /app/Smart-trafic-controller-api/Smart-trafic-controller-api.csproj
+
+# Add entrypoint script which will ensure appsettings.json exists and run migrations at container start
+COPY docker/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+WORKDIR /app/Smart-trafic-controller-api
+
+CMD ["/app/entrypoint.sh"]
