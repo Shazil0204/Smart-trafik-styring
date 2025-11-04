@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Smart_trafic_controller_api.DTOs.User;
 using Smart_trafic_controller_api.Interfaces;
+using Smart_trafic_controller_api.Utilities;
 
 namespace Smart_trafic_controller_api.Controller
 {
@@ -32,12 +33,30 @@ namespace Smart_trafic_controller_api.Controller
         {
             try
             {
-                // Assuming userId is obtained from the authenticated user's context
-                Guid userId = Guid.Parse(User.FindFirst("sub")?.Value ?? throw new Exception("User ID not found in token."));
+                Guid userId;
+                
+                // Try to get user ID from JWT claims first (if token is in Authorization header)
+                var userIdFromClaims = User.FindFirst("sub")?.Value;
+                
+                if (!string.IsNullOrEmpty(userIdFromClaims))
+                {
+                    userId = Guid.Parse(userIdFromClaims);
+                }
+                else
+                {
+                    // If not found in claims, try to get from cookie
+                    string? jwtToken = Request.Cookies["jwtToken"];
+                    if (string.IsNullOrEmpty(jwtToken))
+                        return Unauthorized("No authentication token found.");
+                        
+                    userId = JwtHelper.GetUserIdFromToken(jwtToken) ?? 
+                             throw new Exception("User ID not found in token.");
+                }
+                
                 var userInfo = await _userService.GetUserByIdAsync(userId);
                 if (userInfo == null)
                     return NotFound("User not found.");
-
+        
                 return Ok(userInfo);
             }
             catch (Exception ex)
