@@ -65,23 +65,23 @@ services:
       - mariadb
       - mosquitto
 
-  frontend:
-    build:
-      context: ../frontend/SmartTraficControlSystem
-      dockerfile: ../../docker/Dockerfile.frontend
-    container_name: smart_traffic_frontend
-    working_dir: /app
-    volumes:
-      - ../frontend/SmartTraficControlSystem:/app:cached
-    ports:
-      - '5212:5212'
-      - '5679:5678'
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
-    networks:
-      - smart_traffic_network
-    restart: unless-stopped
+  # frontend:
+  #   build:
+  #     context: ../frontend/SmartTraficControlSystem
+  #     dockerfile: ../../docker/Dockerfile.frontend
+  #   container_name: smart_traffic_frontend
+  #   working_dir: /app
+  #   volumes:
+  #     - ../frontend/SmartTraficControlSystem:/app:cached
+  #   ports:
+  #     - '5212:5212'
+  #     - '5679:5678'
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
+  #   networks:
+  #     - smart_traffic_network
+  #   restart: unless-stopped
 
   nginx:
     image: nginx
