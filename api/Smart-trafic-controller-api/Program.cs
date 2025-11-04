@@ -1,6 +1,4 @@
-using System.Text;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Smart_traffic_controller_api.BackgroundServices;
 using Smart_traffic_controller_api.Data;
@@ -34,35 +32,6 @@ namespace Smart_traffic_controller_api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            string jwtSecretKey =
-                builder.Configuration["JwtSettings:Key"]
-                ?? throw new Exception("Error while building");
-
-            builder
-                .Services.AddAuthentication("Bearer")
-                .AddJwtBearer(
-                    "Bearer",
-                    options =>
-                    {
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidateAudience = true,
-                            ValidateLifetime = true,
-                            ValidateIssuerSigningKey = true,
-                            ValidIssuer =
-                                builder.Configuration["JwtSettings:Issuer"]
-                                ?? "smart traffic controller api",
-                            ValidAudience =
-                                builder.Configuration["JwtSettings:Audience"]
-                                ?? "smart traffic controller api users",
-                            IssuerSigningKey = new SymmetricSecurityKey(
-                                Encoding.UTF8.GetBytes(jwtSecretKey)
-                            ),
-                        };
-                    }
-                );
-
             builder
                 .Services.AddControllers()
                 .AddNewtonsoftJson(options =>
@@ -80,9 +49,6 @@ namespace Smart_traffic_controller_api
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
-            app.UseAuthentication(); // CRITICAL: Must be BEFORE UseAuthorization()
-            app.UseAuthorization();
             app.MapControllers();
             try
             {
