@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Smart_trafic_controller_api.BackgroundServices;
 using Smart_trafic_controller_api.Data;
 using Smart_trafic_controller_api.Interfaces;
 using Smart_trafic_controller_api.Repositories;
@@ -34,28 +35,43 @@ namespace Smart_trafic_controller_api
             builder.Services.AddScoped<ISensorLogService, SensorlogService>();
             builder.Services.AddScoped<ISensorLogRepository, SensorLogRepository>();
 
+            builder.Services.AddHostedService<MqttSubscriberBackgroundService>();
+
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            string jwtSecretKey = builder.Configuration["JwtSettings:Key"] ?? throw new Exception("Error while building");
+            string jwtSecretKey =
+                builder.Configuration["JwtSettings:Key"]
+                ?? throw new Exception("Error while building");
 
-            builder.Services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
+            builder
+                .Services.AddAuthentication("Bearer")
+                .AddJwtBearer(
+                    "Bearer",
+                    options =>
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = builder.Configuration["JwtSettings:Issuer"] ?? "smart trafic controller api",
-                        ValidAudience = builder.Configuration["JwtSettings:Audience"] ?? "smart trafic controller api users",
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey)),
-                    };
-                });
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer =
+                                builder.Configuration["JwtSettings:Issuer"]
+                                ?? "smart trafic controller api",
+                            ValidAudience =
+                                builder.Configuration["JwtSettings:Audience"]
+                                ?? "smart trafic controller api users",
+                            IssuerSigningKey = new SymmetricSecurityKey(
+                                Encoding.UTF8.GetBytes(jwtSecretKey)
+                            ),
+                        };
+                    }
+                );
 
-            builder.Services.AddControllers()
+            builder
+                .Services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -71,7 +87,9 @@ namespace Smart_trafic_controller_api
                     context.Response.ContentType = "application/json";
                     context.Response.StatusCode = 500;
 
-                    await context.Response.WriteAsJsonAsync(new { Message = "An unexpected error occurred." });
+                    await context.Response.WriteAsJsonAsync(
+                        new { Message = "An unexpected error occurred." }
+                    );
                 });
             });
 

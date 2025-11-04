@@ -50,24 +50,5 @@ namespace Smart_trafic_controller_api.Controller
                 return StatusCode(500, ex.Message);
             }
         }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateSensorLog([FromBody] CreateSensorLogRequestDTO createSensorLogDTO)
-        {
-            try
-            {
-                if (createSensorLogDTO == null)
-                {
-                    return BadRequest("Sensor log data is null.");
-                }
-
-                SensorLogResponseDTO createdSensorLog = await _sensorLogService.CreateSensorLogAsync(createSensorLogDTO);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
     }
 }

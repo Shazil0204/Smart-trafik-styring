@@ -1,13 +1,16 @@
 using Smart_trafic_controller_api.DTOs.SensorLog;
+using Smart_trafic_controller_api.DTOs.TrafficEvent;
 using Smart_trafic_controller_api.Entities;
+using Smart_trafic_controller_api.Enums;
 using Smart_trafic_controller_api.Interfaces;
 using Smart_trafic_controller_api.Mappers;
-using Smart_trafic_controller_api.Enums;
-using Smart_trafic_controller_api.DTOs.TrafficEvent;
 
 namespace Smart_trafic_controller_api.Services
 {
-    public class SensorlogService(ISensorLogRepository sensorLogRepository, ITrafficEventService trafficEventService) : ISensorLogService
+    public class SensorlogService(
+        ISensorLogRepository sensorLogRepository,
+        ITrafficEventService trafficEventService
+    ) : ISensorLogService
     {
         private readonly ISensorLogRepository _sensorLogRepository = sensorLogRepository;
         private readonly ITrafficEventService _trafficEventService = trafficEventService;
@@ -56,35 +59,29 @@ namespace Smart_trafic_controller_api.Services
             }
         }
 
-        public async Task<SensorLogResponseDTO> CreateSensorLogAsync(CreateSensorLogRequestDTO createSensorLogDTO)
+        public async Task CreateSensorLogAsync(SensorValue sensorValue)
         {
             try
             {
-                if (createSensorLogDTO == null)
-                {
-                    throw new ArgumentNullException(
-                        nameof(createSensorLogDTO),
-                        "Sensor log cannot be null."
-                    );
-                }
-                if (createSensorLogDTO.SensorValue.GetType() != typeof(SensorValue))
+                if (sensorValue.GetType() != typeof(SensorValue))
                 {
                     throw new ArgumentException(
                         "Sensor type and sensor value cannot be null or empty."
                     );
                 }
 
-                // TODO:
-                // SensorLog analyze to create trafficevent
-                CreateTrafficEventRequestDTO createTrafficEventRequestDTO = TrafficEventMapper.ToCreateTrafficEventRequestDTO(createSensorLogDTO);
+                CreateTrafficEventRequestDTO createTrafficEventRequestDTO =
+                    new CreateTrafficEventRequestDTO(sensorValue == SensorValue.VEHICLE_GREEN);
 
                 bool trafficEventCreated = false;
-                trafficEventCreated = await _trafficEventService.CreateTrafficEvent(createTrafficEventRequestDTO);
+                trafficEventCreated = await _trafficEventService.CreateTrafficEvent(
+                    createTrafficEventRequestDTO
+                );
 
                 SensorLog createdSensorLog = await _sensorLogRepository.CreateSensorLogAsync(
-                    SensorLogMapper.ToEntity(createSensorLogDTO)
+                    new SensorLog(sensorValue)
                 );
-                return SensorLogMapper.ToResponseDTO(createdSensorLog);
+                return;
             }
             catch (ArgumentNullException argEx)
             {
