@@ -19,7 +19,9 @@ namespace Smart_trafic_controller_api.Mappers
         {
             return new TrafficEventResponseDTO
             {
-                Id = trafficEvent.Id
+                TimeStamp = trafficEvent.TimeStamp,
+                VehicleDetected = trafficEvent.VehicleDetected,
+                TrafficLight = trafficEvent.TrafficLight
                 // You could include more fields later if needed
             };
         }
