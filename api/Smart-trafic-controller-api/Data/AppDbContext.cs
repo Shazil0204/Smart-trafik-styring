@@ -166,9 +166,6 @@ namespace Smart_trafic_controller_api.Data
 
                 entity.Property(e => e.TrafficLight)
                     .HasDefaultValue(false);
-
-                entity.Property(e => e.Duration)
-                    .HasDefaultValue(0);
             });
         }
     }

@@ -3,6 +3,7 @@ using Smart_trafic_controller_api.Entities;
 using Smart_trafic_controller_api.Interfaces;
 using Smart_trafic_controller_api.Mappers;
 using Smart_trafic_controller_api.Enums;
+using Smart_trafic_controller_api.DTOs.TrafficEvent;
 
 namespace Smart_trafic_controller_api.Services
 {
@@ -66,7 +67,7 @@ namespace Smart_trafic_controller_api.Services
                         "Sensor log cannot be null."
                     );
                 }
-                if (createSensorLogDTO.SensorValue.GetType() == typeof(SensorValue))
+                if (createSensorLogDTO.SensorValue.GetType() != typeof(SensorValue))
                 {
                     throw new ArgumentException(
                         "Sensor type and sensor value cannot be null or empty."
@@ -74,11 +75,11 @@ namespace Smart_trafic_controller_api.Services
                 }
 
                 // TODO:
-                // SensorLog analyze to create trafficevent 
-                // if ()
-                // {
+                // SensorLog analyze to create trafficevent
+                CreateTrafficEventRequestDTO createTrafficEventRequestDTO = TrafficEventMapper.ToCreateTrafficEventRequestDTO(createSensorLogDTO);
 
-                // }
+                bool trafficEventCreated = false;
+                trafficEventCreated = await _trafficEventService.CreateTrafficEvent(createTrafficEventRequestDTO);
 
                 SensorLog createdSensorLog = await _sensorLogRepository.CreateSensorLogAsync(
                     SensorLogMapper.ToEntity(createSensorLogDTO)

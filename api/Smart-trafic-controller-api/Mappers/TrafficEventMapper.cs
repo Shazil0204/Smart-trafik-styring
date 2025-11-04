@@ -1,6 +1,8 @@
+using Smart_trafic_controller_api.DTOs.SensorLog;
 using Smart_trafic_controller_api.DTOs.TrafficEvent;
 using Smart_trafic_controller_api.Entities;
 using Smart_trafic_controller_api.Enums;
+using Smart_trafic_controller_api.Services;
 
 namespace Smart_trafic_controller_api.Mappers
 {
@@ -25,6 +27,18 @@ namespace Smart_trafic_controller_api.Mappers
         public static List<TrafficEventResponseDTO> ToResponseListDTO(this List<TrafficEvent> trafficEvents)
         {
             return trafficEvents.Select(te => te.ToResponseDTO()).ToList();
+        }
+
+        public static CreateTrafficEventRequestDTO ToCreateTrafficEventRequestDTO(this CreateSensorLogRequestDTO sensorLogRequestDTO)
+        {
+            if (sensorLogRequestDTO.SensorValue == SensorValue.VEHICLE_RED)
+            {
+                return new CreateTrafficEventRequestDTO(false);
+            }
+            else
+            {
+                return new CreateTrafficEventRequestDTO(true);
+            }
         }
     }
 }
