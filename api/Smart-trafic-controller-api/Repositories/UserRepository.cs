@@ -27,6 +27,18 @@ namespace Smart_trafic_controller_api.Repositories
             }
         }
 
+        public Task<User?> GetUserByIdAsync(Guid userId)
+        {
+            try
+            {
+                return _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving the user.", ex);
+            }
+        }
+
         public async Task<User?> GetUserByUserNameAsync(string userName)
         {
             try

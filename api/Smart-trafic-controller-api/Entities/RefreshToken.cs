@@ -24,16 +24,22 @@ namespace Smart_trafic_controller_api.Entities
             UserId = userId;
             TokenHash = tokenHash.Hashed;
             CreatedAt = DateTime.UtcNow;
-            ExpiresAt = expiresAt;  
+            ExpiresAt = expiresAt;
             IsRevoked = false;
         }
 
-        public bool IsActive => RevokedAt == null && !IsExpired;
+        public bool IsActive => !IsRevoked && !IsExpired;
 
         public bool IsExpired => DateTime.UtcNow >= ExpiresAt;
 
+        public bool IsNearExpiry(int hoursBeforeExpiry = 2)
+        {
+            return DateTime.UtcNow >= ExpiresAt.AddHours(-hoursBeforeExpiry);
+        }
+
         public void Revoke()
         {
+            IsRevoked = true;
             RevokedAt = DateTime.UtcNow;
         }
     }

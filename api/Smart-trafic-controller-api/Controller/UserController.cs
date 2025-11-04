@@ -31,35 +31,18 @@ namespace Smart_trafic_controller_api.Controller
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> LoginUser([FromBody] UserLoginRequestDTO requestDTO)
+        [HttpGet]
+        public async Task<IActionResult> GetUserInfo()
         {
             try
             {
-                UserResponseDTO? user = await _userService.LoginUserAsync(requestDTO);
-                if (user == null)
-                {
-                    return Unauthorized("Invalid username or password.");
-                }
-                return Ok(user);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
+                // Assuming userId is obtained from the authenticated user's context
+                Guid userId = Guid.Parse(User.FindFirst("sub")?.Value ?? throw new Exception("User ID not found in token."));
+                var userInfo = await _userService.GetUserByIdAsync(userId);
+                if (userInfo == null)
+                    return NotFound("User not found.");
 
-        [HttpPost("logout/{userId}")]
-        public async Task<IActionResult> LogoutUser([FromRoute] Guid userId)
-        {
-            try
-            {
-                bool result = await _userService.LogoutUserAsync(userId);
-                if (!result)
-                {
-                    return BadRequest("Logout failed.");
-                }
-                return Ok("Logout successful.");
+                return Ok(userInfo);
             }
             catch (Exception ex)
             {
