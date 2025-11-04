@@ -45,21 +45,6 @@ namespace Smart_trafic_controller_api.Repositories
             }
         }
 
-        public async Task<(TrafficEvent? traffciEvent, int count)> GetLatestTrafficEventAsync()
-        {
-            try
-            {
-                TrafficEvent? trafficEvent = await _context.TrafficEvents.OrderByDescending(u => u.Id)
-                      .FirstAsync();
-                int count = await _context.TrafficEvents.CountAsync();
-                return (trafficEvent, count);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message ?? "Error occured while retrieving Latest traffic event");
-            }
-        }
-
         public async Task<TrafficEvent> CreateTrafficEventAsync(TrafficEvent trafficEvent)
         {
             try

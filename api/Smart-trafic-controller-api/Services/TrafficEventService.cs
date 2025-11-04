@@ -12,13 +12,6 @@ namespace Smart_trafic_controller_api.Services
         {
             try
             {
-                (TrafficEvent? latestTrafficEvent, int count ) = await _trafficEventRepository.GetLatestTrafficEventAsync();
-
-                if (count > 0)
-                {
-                    return false;
-                }
-
                 TrafficEvent trafficEvent = TrafficEventMapper.ToEntity(trafficEventRequestDTO);
                 await _trafficEventRepository.CreateTrafficEventAsync(trafficEvent);
                 return true;
