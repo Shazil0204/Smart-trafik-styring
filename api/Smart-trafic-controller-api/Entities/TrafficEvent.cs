@@ -1,4 +1,3 @@
-using Smart_trafic_controller_api.Enums;
 
 namespace Smart_trafic_controller_api.Entities
 {
@@ -7,20 +6,18 @@ namespace Smart_trafic_controller_api.Entities
         public Guid Id { get; private set; }
         public DateTime TimeStamp { get; private set; }
         public bool VehicleDetected { get; private set; }
-        public bool PedestrianDetected { get; private set; }
-        public vehicleLightStatus VehicleLightStatus { get; private set; }
-        public PedestrainLightStatus PedLightStatus { get; private set; }
-        public int Duration { get; private set; }
+        public bool TrafficLight { get; private set; }
         private TrafficEvent() { } // For EF Core
-        public TrafficEvent(DateTime timeStamp, bool vehicleDetected, bool pedestrianDetected, vehicleLightStatus vehicleLightStatus, PedestrainLightStatus pedLightStatus, int duration)
+
+        // TODO:
+        // In service, check the latest created trafficevent, and see if it is more than
+        // seconds ago.
+        public TrafficEvent(bool vehicleDetected)
         {
             Id = Guid.NewGuid();
-            TimeStamp = timeStamp;
+            TimeStamp = DateTime.UtcNow;
             VehicleDetected = vehicleDetected;
-            PedestrianDetected = pedestrianDetected;
-            VehicleLightStatus = vehicleLightStatus;
-            PedLightStatus = pedLightStatus;
-            Duration = duration;
+            TrafficLight = vehicleDetected;
         }
     }
 }

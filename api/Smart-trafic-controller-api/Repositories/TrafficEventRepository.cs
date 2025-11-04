@@ -5,7 +5,7 @@ using Smart_trafic_controller_api.Interfaces;
 
 namespace Smart_trafic_controller_api.Repositories
 {
-    public class TrafficEventRepository(AppDbContext context): ITrafficEventRepository
+    public class TrafficEventRepository(AppDbContext context) : ITrafficEventRepository
     {
         private readonly AppDbContext _context = context;
 

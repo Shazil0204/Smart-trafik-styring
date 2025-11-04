@@ -148,13 +148,9 @@ namespace Smart_trafic_controller_api.Data
                 entity.Property(e => e.Timestamp)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                entity.Property(e => e.SensorType)
-                    .HasConversion<string>()
-                    .HasMaxLength(50);
-
                 entity.Property(e => e.SensorValue)
-                    .IsRequired()
-                    .HasMaxLength(255);
+                    .HasConversion<string>()
+                    .IsRequired();
             });
 
             // Configure TrafficEvent entity
@@ -168,19 +164,8 @@ namespace Smart_trafic_controller_api.Data
                 entity.Property(e => e.VehicleDetected)
                     .HasDefaultValue(false);
 
-                entity.Property(e => e.PedestrianDetected)
+                entity.Property(e => e.TrafficLight)
                     .HasDefaultValue(false);
-
-                entity.Property(e => e.VehicleLightStatus)
-                    .HasConversion<string>()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.PedLightStatus)
-                    .HasConversion<string>()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.Duration)
-                    .HasDefaultValue(0);
             });
         }
     }
