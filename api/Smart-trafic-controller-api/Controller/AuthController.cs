@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Smart_trafic_controller_api.DTOs.User;
 using Smart_trafic_controller_api.Interfaces;
@@ -8,7 +7,10 @@ namespace Smart_trafic_controller_api.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController(IConfiguration configuration, IRefreshTokenService refreshTokenService) : ControllerBase
+    public class AuthController(
+        IConfiguration configuration,
+        IRefreshTokenService refreshTokenService
+    ) : ControllerBase
     {
         private readonly IConfiguration _config = configuration;
         private readonly IRefreshTokenService _refreshTokenService = refreshTokenService;
@@ -18,7 +20,10 @@ namespace Smart_trafic_controller_api.Controller
         {
             try
             {
-                var result = await _refreshTokenService.LoginAsync(requestDto.Username, requestDto.Password);
+                var result = await _refreshTokenService.LoginAsync(
+                    requestDto.Username,
+                    requestDto.Password
+                );
 
                 // Set both tokens as cookies
                 SetJwtCookie(result.Jwt);
@@ -145,14 +150,16 @@ namespace Smart_trafic_controller_api.Controller
                     refreshTokenValid = true; // Simplified for now
                 }
 
-                return Ok(new
-                {
-                    IsAuthenticated = jwtValid || refreshTokenValid,
-                    JwtValid = jwtValid,
-                    RefreshTokenValid = refreshTokenValid,
-                    RefreshTokenNearExpiry = refreshTokenNearExpiry,
-                    UserId = userId
-                });
+                return Ok(
+                    new
+                    {
+                        IsAuthenticated = jwtValid || refreshTokenValid,
+                        JwtValid = jwtValid,
+                        RefreshTokenValid = refreshTokenValid,
+                        RefreshTokenNearExpiry = refreshTokenNearExpiry,
+                        UserId = userId,
+                    }
+                );
             }
             catch (Exception ex)
             {
@@ -174,13 +181,16 @@ namespace Smart_trafic_controller_api.Controller
                         HttpOnly = true,
                         Secure = true,
                         SameSite = SameSiteMode.Strict,
-                        Expires = DateTimeOffset.UtcNow.AddDays(refreshTokenDays)
+                        Expires = DateTimeOffset.UtcNow.AddDays(refreshTokenDays),
                     }
                 );
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while setting the refresh token cookie.", ex);
+                throw new Exception(
+                    "An error occurred while setting the refresh token cookie.",
+                    ex
+                );
             }
         }
 
@@ -198,7 +208,7 @@ namespace Smart_trafic_controller_api.Controller
                         HttpOnly = true,
                         Secure = true,
                         SameSite = SameSiteMode.Strict,
-                        Expires = DateTimeOffset.UtcNow.AddMinutes(jwtExpiresMinutes)
+                        Expires = DateTimeOffset.UtcNow.AddMinutes(jwtExpiresMinutes),
                     }
                 );
             }

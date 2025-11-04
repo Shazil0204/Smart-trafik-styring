@@ -29,7 +29,7 @@ namespace Smart_trafic_controller_api.BackgroundServices
             _mqttClient = factory.CreateMqttClient();
 
             var options = new MqttClientOptionsBuilder()
-                .WithTcpServer("localhost", 1883)
+                .WithTcpServer("mosquitto", 1883)
                 .WithClientId("aspnet-subscriber")
                 .Build();
 
@@ -44,7 +44,11 @@ namespace Smart_trafic_controller_api.BackgroundServices
 
             _mqttClient.UseDisconnectedHandler(e =>
             {
-                _logger.LogWarning("Disconnected from MQTT broker.");
+                // Some MqttNet versions expose only Exception on disconnect events.
+                _logger.LogWarning(
+                    "Disconnected from MQTT broker. Exception: {exception}",
+                    e?.Exception?.Message
+                );
             });
 
             _mqttClient.UseApplicationMessageReceivedHandler(async e =>
@@ -86,13 +90,58 @@ namespace Smart_trafic_controller_api.BackgroundServices
                 }
             });
 
-            try
+            // Retry/connect loop with exponential backoff. This keeps attempting to connect
+            // until the service is stopped. We avoid starting multiple concurrent connect
+            // attempts by only connecting from this loop and checking IsConnected.
+            var backoffSeconds = 1;
+            const int maxBackoffSeconds = 30;
+
+            while (!stoppingToken.IsCancellationRequested)
             {
-                await _mqttClient.ConnectAsync(options, stoppingToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to MQTT broker.");
+                if (_mqttClient.IsConnected)
+                {
+                    // Already connected; wait a bit before re-checking
+                    try
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        break;
+                    }
+                    continue;
+                }
+
+                try
+                {
+                    _logger.LogInformation("Attempting to connect to MQTT broker...");
+                    await _mqttClient.ConnectAsync(options, stoppingToken);
+                    // Reset backoff after successful connection
+                    backoffSeconds = 1;
+                }
+                catch (OperationCanceledException)
+                {
+                    // Stopping token triggered
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(
+                        ex,
+                        "Failed to connect to MQTT broker. Retrying in {seconds} seconds.",
+                        backoffSeconds
+                    );
+                    try
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(backoffSeconds), stoppingToken);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        break;
+                    }
+                    // Exponential backoff with a cap
+                    backoffSeconds = Math.Min(backoffSeconds * 2, maxBackoffSeconds);
+                }
             }
         }
 
