@@ -73,11 +73,6 @@ namespace Smart_trafic_controller_api.Services
                 CreateTrafficEventRequestDTO createTrafficEventRequestDTO =
                     new CreateTrafficEventRequestDTO(sensorValue == SensorValue.VEHICLE_GREEN);
 
-                bool trafficEventCreated = false;
-                trafficEventCreated = await _trafficEventService.CreateTrafficEvent(
-                    createTrafficEventRequestDTO
-                );
-
                 SensorLog createdSensorLog = await _sensorLogRepository.CreateSensorLogAsync(
                     new SensorLog(sensorValue)
                 );
