@@ -40,30 +40,16 @@ namespace Smart_trafic_controller_api.Services
             }
         }
 
-        public async Task<UserResponseDTO?> LoginUserAsync(UserLoginRequestDTO requestDTO)
+        public Task<User?> GetUserByIdAsync(Guid userId)
         {
             try
             {
-                User? user = await _userRepository.GetUserByUserNameAsync(requestDTO.UserName);
-
-                if (user == null || !_hashing.VerifyHash(requestDTO.Password, user.Password))
-                {
-                    throw new Exception("Invalid username or password.");
-                }
-                
-                // Additional login logic can be added here (e.g., generating tokens)
-                return UserMapper.ToResponseDTO(user);
+                return _userRepository.GetUserByIdAsync(userId);
             }
             catch (Exception)
             {
                 throw;
             }
-        }
-
-        public async Task<bool> LogoutUserAsync(Guid userId)
-        {
-            // TODO: Implement logout logic if needed (e.g., token invalidation)
-            return await Task.FromResult(true);
         }
 
         public async Task<bool> SoftDeleteUserAsync(Guid userId)
