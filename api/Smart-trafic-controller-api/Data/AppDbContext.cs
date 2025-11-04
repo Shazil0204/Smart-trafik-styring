@@ -8,8 +8,6 @@ namespace Smart_traffic_controller_api.Data
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options) { }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<SensorLog> SensorLogs { get; set; }
 
@@ -67,45 +65,7 @@ namespace Smart_traffic_controller_api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            // Configure User entity
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.UserName).IsRequired().HasMaxLength(50);
-
-                entity.HasIndex(e => e.UserName).IsUnique();
-
-                entity.Property(e => e.Password).IsRequired().HasMaxLength(255);
-
-                entity.Property(e => e.IsDeleted).HasDefaultValue(false);
-
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-            });
-
-            // Configure RefreshToken entity
-            modelBuilder.Entity<RefreshToken>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.TokenHash).IsRequired().HasMaxLength(255);
-
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                entity.Property(e => e.ExpiresAt).IsRequired();
-
-                entity.Property(e => e.IsRevoked).HasDefaultValue(false);
-
-                entity.Property(e => e.RevokedAt).IsRequired(false);
-
-                // Configure relationship with User
-                entity
-                    .HasOne(e => e.User)
-                    .WithMany()
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
-            });
+            ;
 
             // Configure AuditLog entity
             modelBuilder.Entity<AuditLog>(entity =>

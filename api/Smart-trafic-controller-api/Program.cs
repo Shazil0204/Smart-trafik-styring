@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 using Smart_traffic_controller_api.BackgroundServices;
 using Smart_traffic_controller_api.Data;
 using Smart_traffic_controller_api.Interfaces;
+using Smart_traffic_controller_api.Middleware;
 using Smart_traffic_controller_api.Repositories;
 using Smart_traffic_controller_api.Services;
-using Smart_traffic_controller_api.Utilities;
 
 namespace Smart_traffic_controller_api
 {
@@ -25,11 +25,6 @@ namespace Smart_traffic_controller_api
                 options.UseMySql(conn, ServerVersion.AutoDetect(conn))
             );
 
-            builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
-            builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-            builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             builder.Services.AddScoped<ISensorLogService, SensorLogService>();
             builder.Services.AddScoped<ISensorLogRepository, SensorLogRepository>();
 
@@ -77,19 +72,7 @@ namespace Smart_traffic_controller_api
 
             var app = builder.Build();
 
-            // Global exception handling for runtime errors
-            app.UseExceptionHandler(errorApp =>
-            {
-                errorApp.Run(async context =>
-                {
-                    context.Response.ContentType = "application/json";
-                    context.Response.StatusCode = 500;
-
-                    await context.Response.WriteAsJsonAsync(
-                        new { Message = "An unexpected error occurred." }
-                    );
-                });
-            });
+            app.UseMiddleware<ExceptionMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {
