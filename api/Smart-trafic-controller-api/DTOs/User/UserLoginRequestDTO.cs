@@ -1,4 +1,4 @@
-namespace Smart_trafic_controller_api.DTOs.User
+namespace Smart_traffic_controller_api.DTOs.User
 {
     public class UserLoginRequestDTO(string userName, string password)
     {

@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Smart_trafic_controller_api.Utilities
+namespace Smart_traffic_controller_api.Utilities
 {
     public static class JwtHelper
     {

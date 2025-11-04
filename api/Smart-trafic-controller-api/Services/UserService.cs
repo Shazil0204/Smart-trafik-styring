@@ -1,10 +1,10 @@
-using Smart_trafic_controller_api.DTOs.User;
-using Smart_trafic_controller_api.Entities;
-using Smart_trafic_controller_api.Interfaces;
-using Smart_trafic_controller_api.Mappers;
-using Smart_trafic_controller_api.Utilities;
+using Smart_traffic_controller_api.DTOs.User;
+using Smart_traffic_controller_api.Entities;
+using Smart_traffic_controller_api.Interfaces;
+using Smart_traffic_controller_api.Mappers;
+using Smart_traffic_controller_api.Utilities;
 
-namespace Smart_trafic_controller_api.Services
+namespace Smart_traffic_controller_api.Services
 {
     public class UserService(IUserRepository userRepository) : IUserService
     {

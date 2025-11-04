@@ -1,4 +1,4 @@
-namespace Smart_trafic_controller_api.Enums
+namespace Smart_traffic_controller_api.Enums
 {
     public enum SensorValue
     {

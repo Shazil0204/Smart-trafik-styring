@@ -2,14 +2,14 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Smart_trafic_controller_api.BackgroundServices;
-using Smart_trafic_controller_api.Data;
-using Smart_trafic_controller_api.Interfaces;
-using Smart_trafic_controller_api.Repositories;
-using Smart_trafic_controller_api.Services;
-using Smart_trafic_controller_api.Utilities;
+using Smart_traffic_controller_api.BackgroundServices;
+using Smart_traffic_controller_api.Data;
+using Smart_traffic_controller_api.Interfaces;
+using Smart_traffic_controller_api.Repositories;
+using Smart_traffic_controller_api.Services;
+using Smart_traffic_controller_api.Utilities;
 
-namespace Smart_trafic_controller_api
+namespace Smart_traffic_controller_api
 {
     public class Program
     {
@@ -57,10 +57,10 @@ namespace Smart_trafic_controller_api
                             ValidateIssuerSigningKey = true,
                             ValidIssuer =
                                 builder.Configuration["JwtSettings:Issuer"]
-                                ?? "smart trafic controller api",
+                                ?? "smart traffic controller api",
                             ValidAudience =
                                 builder.Configuration["JwtSettings:Audience"]
-                                ?? "smart trafic controller api users",
+                                ?? "smart traffic controller api users",
                             IssuerSigningKey = new SymmetricSecurityKey(
                                 Encoding.UTF8.GetBytes(jwtSecretKey)
                             ),

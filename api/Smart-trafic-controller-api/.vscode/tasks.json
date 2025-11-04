@@ -5,7 +5,10 @@
       "label": "build",
       "command": "dotnet",
       "type": "process",
-      "args": ["build", "${workspaceFolder}/Smart-trafic-controller-api.csproj"],
+      "args": [
+        "build",
+        "${workspaceFolder}/Smart-traffic-controller-api.csproj"
+      ],
       "problemMatcher": "$msCompile"
     }
   ]

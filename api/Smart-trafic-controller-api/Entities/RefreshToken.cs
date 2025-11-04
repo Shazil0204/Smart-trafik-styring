@@ -1,6 +1,6 @@
-using Smart_trafic_controller_api.ValueObjects;
+using Smart_traffic_controller_api.ValueObjects;
 
-namespace Smart_trafic_controller_api.Entities
+namespace Smart_traffic_controller_api.Entities
 {
     public class RefreshToken
     {

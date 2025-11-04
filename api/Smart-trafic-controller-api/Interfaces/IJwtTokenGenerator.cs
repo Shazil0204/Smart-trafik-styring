@@ -1,4 +1,4 @@
-namespace Smart_trafic_controller_api.Interfaces
+namespace Smart_traffic_controller_api.Interfaces
 {
     public interface IJwtTokenGenerator
     {

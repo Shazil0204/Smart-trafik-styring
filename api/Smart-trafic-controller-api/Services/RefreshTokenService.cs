@@ -1,9 +1,9 @@
-using Smart_trafic_controller_api.Entities;
-using Smart_trafic_controller_api.Interfaces;
-using Smart_trafic_controller_api.Utilities;
-using Smart_trafic_controller_api.ValueObjects;
+using Smart_traffic_controller_api.Entities;
+using Smart_traffic_controller_api.Interfaces;
+using Smart_traffic_controller_api.Utilities;
+using Smart_traffic_controller_api.ValueObjects;
 
-namespace Smart_trafic_controller_api.Services
+namespace Smart_traffic_controller_api.Services
 {
     public class RefreshTokenService(
         IConfiguration config,

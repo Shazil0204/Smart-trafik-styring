@@ -2,10 +2,10 @@ using System.Text;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
-using Smart_trafic_controller_api.Enums;
-using Smart_trafic_controller_api.Interfaces;
+using Smart_traffic_controller_api.Enums;
+using Smart_traffic_controller_api.Interfaces;
 
-namespace Smart_trafic_controller_api.BackgroundServices
+namespace Smart_traffic_controller_api.BackgroundServices
 {
     public class MqttSubscriberBackgroundService : BackgroundService
     {

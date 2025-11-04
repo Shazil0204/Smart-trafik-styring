@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Smart_trafic_controller_api.DTOs.SensorLog;
-using Smart_trafic_controller_api.Interfaces;
+using Smart_traffic_controller_api.DTOs.SensorLog;
+using Smart_traffic_controller_api.Interfaces;
 
-namespace Smart_trafic_controller_api.Controller
+namespace Smart_traffic_controller_api.Controller
 {
     [ApiController]
     [Route("api/[controller]")]

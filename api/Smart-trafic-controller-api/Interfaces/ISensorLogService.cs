@@ -1,7 +1,7 @@
-using Smart_trafic_controller_api.DTOs.SensorLog;
-using Smart_trafic_controller_api.Enums;
+using Smart_traffic_controller_api.DTOs.SensorLog;
+using Smart_traffic_controller_api.Enums;
 
-namespace Smart_trafic_controller_api.Interfaces
+namespace Smart_traffic_controller_api.Interfaces
 {
     public interface ISensorLogService
     {

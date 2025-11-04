@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Smart_trafic_controller_api.Utilities
+namespace Smart_traffic_controller_api.Utilities
 {
     public partial class Hashing
     {

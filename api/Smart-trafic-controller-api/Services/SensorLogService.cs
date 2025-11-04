@@ -1,10 +1,10 @@
-using Smart_trafic_controller_api.DTOs.SensorLog;
-using Smart_trafic_controller_api.Entities;
-using Smart_trafic_controller_api.Enums;
-using Smart_trafic_controller_api.Interfaces;
-using Smart_trafic_controller_api.Mappers;
+using Smart_traffic_controller_api.DTOs.SensorLog;
+using Smart_traffic_controller_api.Entities;
+using Smart_traffic_controller_api.Enums;
+using Smart_traffic_controller_api.Interfaces;
+using Smart_traffic_controller_api.Mappers;
 
-namespace Smart_trafic_controller_api.Services
+namespace Smart_traffic_controller_api.Services
 {
     public class SensorLogService(ISensorLogRepository sensorLogRepository) : ISensorLogService
     {

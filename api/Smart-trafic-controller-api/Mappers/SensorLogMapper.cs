@@ -1,7 +1,7 @@
-using Smart_trafic_controller_api.DTOs.SensorLog;
-using Smart_trafic_controller_api.Entities;
+using Smart_traffic_controller_api.DTOs.SensorLog;
+using Smart_traffic_controller_api.Entities;
 
-namespace Smart_trafic_controller_api.Mappers
+namespace Smart_traffic_controller_api.Mappers
 {
     public static class SensorLogMapper
     {

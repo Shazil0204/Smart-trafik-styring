@@ -2,9 +2,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Smart_trafic_controller_api.Interfaces;
+using Smart_traffic_controller_api.Interfaces;
 
-namespace Smart_trafic_controller_api.Utilities
+namespace Smart_traffic_controller_api.Utilities
 {
     public class JwtTokenGenerator : IJwtTokenGenerator
     {

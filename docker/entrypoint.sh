@@ -6,7 +6,7 @@ set -e
 echo "[entrypoint] Starting entrypoint script"
 
 # Move to project folder
-cd /app/Smart-trafic-controller-api || { echo "Project folder not found"; exit 1; }
+cd /app/Smart-traffic-controller-api || { echo "Project folder not found"; exit 1; }
 
 # Ensure appsettings.json exists (minimal file with empty object)
 if [ ! -f appsettings.json ]; then
@@ -26,7 +26,7 @@ fi
 if [ ! -d Migrations ]; then
   echo "[entrypoint] No Migrations folder found - attempting to add InitialCreate migration"
   set +e
-  dotnet ef migrations add InitialCreate -p ./Smart-trafic-controller-api.csproj -s ./Smart-trafic-controller-api.csproj -o Migrations
+  dotnet ef migrations add InitialCreate -p ./Smart-traffic-controller-api.csproj -s ./Smart-traffic-controller-api.csproj -o Migrations
   MIG_ADD_EXIT=$?
   set -e
   if [ "$MIG_ADD_EXIT" -ne 0 ]; then
@@ -41,7 +41,7 @@ fi
 # Try to apply migrations to the database. Continue even if it fails (DB might not be available yet).
 set +e
 echo "[entrypoint] Attempting to run 'dotnet ef database update'"
-dotnet ef database update -p ./Smart-trafic-controller-api.csproj -s ./Smart-trafic-controller-api.csproj
+dotnet ef database update -p ./Smart-traffic-controller-api.csproj -s ./Smart-traffic-controller-api.csproj
 DB_UPDATE_EXIT=$?
 set -e
 if [ "$DB_UPDATE_EXIT" -ne 0 ]; then
@@ -51,4 +51,4 @@ else
 fi
 
 echo "[entrypoint] Starting dotnet watch run"
-exec dotnet watch run --project ./Smart-trafic-controller-api.csproj --urls "http://0.0.0.0:5010"
+exec dotnet watch run --project ./Smart-traffic-controller-api.csproj --urls "http://0.0.0.0:5010"

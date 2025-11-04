@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Smart_trafic_controller_api.Entities;
+using Smart_traffic_controller_api.Entities;
 
-namespace Smart_trafic_controller_api.Data
+namespace Smart_traffic_controller_api.Data
 {
     public class AppDbContext : DbContext
     {

@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Smart_trafic_controller_api.ValueObjects
+namespace Smart_traffic_controller_api.ValueObjects
 {
     public class RefreshTokenValueObject
     {

@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Smart_trafic_controller_api.Data;
-using Smart_trafic_controller_api.Entities;
-using Smart_trafic_controller_api.Interfaces;
+using Smart_traffic_controller_api.Data;
+using Smart_traffic_controller_api.Entities;
+using Smart_traffic_controller_api.Interfaces;
 
-namespace Smart_trafic_controller_api.Repositories
+namespace Smart_traffic_controller_api.Repositories
 {
     public class SensorLogRepository(AppDbContext context) : ISensorLogRepository
     {

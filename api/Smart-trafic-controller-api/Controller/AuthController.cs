@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using Smart_trafic_controller_api.DTOs.User;
-using Smart_trafic_controller_api.Interfaces;
-using Smart_trafic_controller_api.Utilities;
+using Smart_traffic_controller_api.DTOs.User;
+using Smart_traffic_controller_api.Interfaces;
+using Smart_traffic_controller_api.Utilities;
 
-namespace Smart_trafic_controller_api.Controller
+namespace Smart_traffic_controller_api.Controller
 {
     [ApiController]
     [Route("api/[controller]")]

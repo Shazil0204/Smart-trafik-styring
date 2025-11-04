@@ -1,7 +1,7 @@
-using Smart_trafic_controller_api.DTOs.User;
-using Smart_trafic_controller_api.Entities;
+using Smart_traffic_controller_api.DTOs.User;
+using Smart_traffic_controller_api.Entities;
 
-namespace Smart_trafic_controller_api.Interfaces
+namespace Smart_traffic_controller_api.Interfaces
 {
     public interface IUserService
     {

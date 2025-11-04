@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Smart_trafic_controller_api.Data;
-using Smart_trafic_controller_api.Entities;
-using Smart_trafic_controller_api.Interfaces;
+using Smart_traffic_controller_api.Data;
+using Smart_traffic_controller_api.Entities;
+using Smart_traffic_controller_api.Interfaces;
 
-namespace Smart_trafic_controller_api.Repositories
+namespace Smart_traffic_controller_api.Repositories
 {
     public class RefreshTokenRepository(AppDbContext context) : IRefreshTokenRepository
     {
@@ -27,7 +27,7 @@ namespace Smart_trafic_controller_api.Repositories
             {
                 // Now we can do fast database lookup with SHA256 hash
                 string hashedToken =
-                    Smart_trafic_controller_api.ValueObjects.RefreshTokenValueObject.ComputeSha256Hash(
+                    Smart_traffic_controller_api.ValueObjects.RefreshTokenValueObject.ComputeSha256Hash(
                         rawToken
                     );
 
@@ -47,7 +47,7 @@ namespace Smart_trafic_controller_api.Repositories
             {
                 // Fast database lookup with SHA256 hash + UserId filter
                 string hashedToken =
-                    Smart_trafic_controller_api.ValueObjects.RefreshTokenValueObject.ComputeSha256Hash(
+                    Smart_traffic_controller_api.ValueObjects.RefreshTokenValueObject.ComputeSha256Hash(
                         rawToken
                     );
 
