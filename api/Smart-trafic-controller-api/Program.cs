@@ -38,12 +38,7 @@ namespace Smart_trafic_controller_api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            string? jwtSecretKey = builder.Configuration["JwtSettings:Key"];
-            if (string.IsNullOrEmpty(jwtSecretKey))
-            {
-                // Use a default key for design-time scenarios
-                jwtSecretKey = "This-is-my-very-long-random-secret-key-379";
-            }
+            string jwtSecretKey = builder.Configuration["JwtSettings:Key"] ?? throw new Exception("Error while building");
 
             builder.Services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>

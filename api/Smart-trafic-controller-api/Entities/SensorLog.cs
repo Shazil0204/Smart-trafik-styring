@@ -6,15 +6,13 @@ namespace Smart_trafic_controller_api.Entities
     {
         public int Id { get; private set; }
         public DateTime Timestamp { get; private set; }
-        public SensorType SensorType { get; private set; }
-        public string SensorValue { get; private set; } = null!;
+        public SensorValue SensorValue { get; private set; }
 
         private SensorLog() { } // For EF Core
 
-        public SensorLog(SensorType sensorType, string sensorValue)
+        public SensorLog(SensorValue sensorValue)
         {
             Timestamp = DateTime.UtcNow;
-            SensorType = sensorType;
             SensorValue = sensorValue;
         }
     }

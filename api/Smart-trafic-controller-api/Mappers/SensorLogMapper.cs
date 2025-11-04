@@ -7,14 +7,13 @@ namespace Smart_trafic_controller_api.Mappers
     {
         public static SensorLog ToEntity(this CreateSensorLogRequestDTO dto)
         {
-            return new SensorLog(dto.SensorType, dto.SensorValue);
+            return new SensorLog(dto.SensorValue);
         }
 
         public static SensorLogResponseDTO ToResponseDTO(this SensorLog sensorLog)
         {
             return new SensorLogResponseDTO(
                 sensorLog.Timestamp,
-                sensorLog.SensorType.ToString(),
                 sensorLog.SensorValue
             );
         }

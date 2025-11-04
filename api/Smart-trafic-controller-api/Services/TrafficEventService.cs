@@ -8,7 +8,7 @@ namespace Smart_trafic_controller_api.Services
     public class TrafficEventService(ITrafficEventRepository trafficEventRepository): ITrafficEventService
     {
         private readonly ITrafficEventRepository _trafficEventRepository = trafficEventRepository;
-        public async Task<bool> CreateTrafficEvent(TrafficEventRequestDTO trafficEventRequestDTO)
+        public async Task<bool> CreateTrafficEvent(CreateTrafficEventRequestDTO trafficEventRequestDTO)
         {
             try
             {
