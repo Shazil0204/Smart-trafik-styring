@@ -2,21 +2,24 @@ using System.Text;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
+using Smart_trafic_controller_api.Interfaces;
 
 namespace Smart_trafic_controller_api.BackgroundServices
 {
     public class MqttSubscriberBackgroundService : BackgroundService
     {
         private readonly ILogger<MqttSubscriberBackgroundService> _logger;
+        private readonly ISensorLogService _sensorLogService;
 
         private IMqttClient _mqttClient;
 
-        public MqttSubscriberBackgroundService(ILogger<MqttSubscriberBackgroundService> logger)
+        public MqttSubscriberBackgroundService(ILogger<MqttSubscriberBackgroundService> logger, ISensorLogService sensorLogService)
         {
             _logger = logger;
+            _sensorLogService = sensorLogService;
         }
 
- protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var factory = new MqttFactory();
             _mqttClient = factory.CreateMqttClient();
@@ -45,10 +48,11 @@ namespace Smart_trafic_controller_api.BackgroundServices
                 var payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
                 _logger.LogInformation($"Received message on topic {e.ApplicationMessage.Topic}: {payload}");
 
-                // TODO: Save to DB
+                // TODO: Finish this implementation
+                // _sensorLogService.CreateSensorLogAsync();
             });
 
-            await _mqttClient.ConnectAsync( , stoppingToken);
+            await _mqttClient.ConnectAsync(options, stoppingToken);
         }
 
         public override async Task StopAsync(CancellationToken cancellationToken)
