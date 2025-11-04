@@ -13,20 +13,14 @@ namespace Smart_traffic_controller_api.Controller
         [HttpGet]
         public async Task<IActionResult> GetAllSensorLogs()
         {
-            try
+            List<SensorLogResponseDTO> sensorLogs = await _sensorLogService.GetAllSensorLogsAsync();
+
+            if (sensorLogs == null || sensorLogs.Count == 0)
             {
-                List<SensorLogResponseDTO> sensorLogs =
-                    await _sensorLogService.GetAllSensorLogsAsync();
-                if (sensorLogs == null || sensorLogs.Count == 0)
-                {
-                    return NotFound("No sensor logs found.");
-                }
-                return Ok(sensorLogs);
+                return NotFound("No sensor logs found.");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+
+            return Ok(sensorLogs);
         }
 
         [HttpGet("timerange")]
@@ -35,20 +29,15 @@ namespace Smart_traffic_controller_api.Controller
             DateTime endTime
         )
         {
-            try
+            List<SensorLogResponseDTO> sensorLogs =
+                await _sensorLogService.GetSensorLogsByTimeRangeAsync(startTime, endTime);
+
+            if (sensorLogs == null || sensorLogs.Count == 0)
             {
-                List<SensorLogResponseDTO> sensorLogs =
-                    await _sensorLogService.GetSensorLogsByTimeRangeAsync(startTime, endTime);
-                if (sensorLogs == null || sensorLogs.Count == 0)
-                {
-                    return NotFound("No sensor logs found in the specified time range.");
-                }
-                return Ok(sensorLogs);
+                return NotFound("No sensor logs found in the specified time range.");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+
+            return Ok(sensorLogs);
         }
     }
 }

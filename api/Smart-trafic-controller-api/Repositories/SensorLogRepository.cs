@@ -11,19 +11,13 @@ namespace Smart_traffic_controller_api.Repositories
 
         public async Task<List<SensorLog>> GetAllSensorLogsAsync()
         {
-            try
+            List<SensorLog> sensorLogs = await _context.SensorLogs.ToListAsync();
+            if (sensorLogs == null || sensorLogs.Count == 0)
             {
-                List<SensorLog> sensorLogs = await _context.SensorLogs.ToListAsync();
-                if (sensorLogs == null || sensorLogs.Count == 0)
-                {
-                    return new List<SensorLog>();
-                }
-                return sensorLogs;
+                return new List<SensorLog>();
             }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while retrieving sensor logs.", ex);
-            }
+
+            return sensorLogs;
         }
 
         public async Task<List<SensorLog>> GetSensorLogsByTimeRangeAsync(
@@ -31,39 +25,23 @@ namespace Smart_traffic_controller_api.Repositories
             DateTime endTime
         )
         {
-            try
+            // Finds all the sensorlogs between the two timestamps
+            List<SensorLog> sensorLogs = await _context
+                .SensorLogs.Where(sl => sl.Timestamp >= startTime && sl.Timestamp <= endTime)
+                .ToListAsync();
+            if (sensorLogs == null || sensorLogs.Count == 0)
             {
-                // Finds all the sensorlogs between the two timestamps
-                List<SensorLog> sensorLogs = await _context
-                    .SensorLogs.Where(sl => sl.Timestamp >= startTime && sl.Timestamp <= endTime)
-                    .ToListAsync();
-                if (sensorLogs == null || sensorLogs.Count == 0)
-                {
-                    return new List<SensorLog>();
-                }
-                return sensorLogs;
+                return new List<SensorLog>();
             }
-            catch (Exception ex)
-            {
-                throw new Exception(
-                    "An error occurred while retrieving sensor logs by time range.",
-                    ex
-                );
-            }
+
+            return sensorLogs;
         }
 
         public async Task<SensorLog> CreateSensorLogAsync(SensorLog sensorLog)
         {
-            try
-            {
-                _context.SensorLogs.Add(sensorLog);
-                await _context.SaveChangesAsync();
-                return sensorLog;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while creating a new sensor log.", ex);
-            }
+            _context.SensorLogs.Add(sensorLog);
+            await _context.SaveChangesAsync();
+            return sensorLog;
         }
     }
 }
