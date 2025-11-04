@@ -7,12 +7,26 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.AddMudServices();
-// Register API HttpClient and application services
-builder.Services.AddHttpClient("SmartTraficControlSystemAPI", client =>
+
+// Configure SignalR for Blazor Server
+builder.Services.AddSignalR(options =>
 {
-    client.BaseAddress = new Uri("http://localhost:5010");
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);
+    options.HandshakeTimeout = TimeSpan.FromSeconds(30);
+    options.MaximumReceiveMessageSize = 32768;
 });
+
+builder.Services.AddMudServices();
+
+// Register API HttpClient and application services
+builder.Services.AddHttpClient("SmartTrafficControlSystemAPI", (serviceProvider, client) =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var apiBaseUrl = configuration["Api:BaseUrl"] ?? "http://localhost";
+    client.BaseAddress = new Uri(apiBaseUrl);
+    client.Timeout = TimeSpan.FromSeconds(30); // Set reasonable timeout
+});
+
 builder.Services.AddScoped<AccountService>();
 
 var app = builder.Build();

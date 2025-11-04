@@ -5,6 +5,32 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch Blazor Server App",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/bin/Debug/net9.0/SmartTraficControlSystem.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Views"
+      }
+    },
+    {
+      "name": "Attach to Blazor Server App",
+      "type": "coreclr",
+      "request": "attach",
+      "processName": "SmartTraficControlSystem"
+    },
+    {
       "name": "Docker: Attach to .NET Core",
       "type": "coreclr",
       "request": "attach",
@@ -18,8 +44,7 @@
         "debuggerPath": "/vsdbg/vsdbg",
         "pipeCwd": "${workspaceFolder}",
         "quoteArgs": false
-      },
-      "args": ["--interpreter=vscode"]
+      }
     }
   ]
 }
