@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Smart_trafic_controller_api.Data;
 using Smart_trafic_controller_api.Entities;
