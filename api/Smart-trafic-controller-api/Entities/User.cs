@@ -1,4 +1,3 @@
-
 namespace Smart_trafic_controller_api.Entities
 {
     public class User

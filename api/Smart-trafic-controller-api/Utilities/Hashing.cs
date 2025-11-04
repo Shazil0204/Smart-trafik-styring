@@ -4,8 +4,12 @@ namespace Smart_trafic_controller_api.Utilities
 {
     public partial class Hashing
     {
-        [GeneratedRegex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", RegexOptions.Compiled)]
+        [GeneratedRegex(
+            @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+            RegexOptions.Compiled
+        )]
         private static partial Regex PasswordValidationRegex();
+
         public string IsPasswordValid(string password)
         {
             if (string.IsNullOrEmpty(password) || !PasswordValidationRegex().IsMatch(password))
@@ -14,6 +18,7 @@ namespace Smart_trafic_controller_api.Utilities
             }
             return string.Empty;
         }
+
         public string HashString(string input)
         {
             try
@@ -30,7 +35,6 @@ namespace Smart_trafic_controller_api.Utilities
         {
             try
             {
-
                 return BCrypt.Net.BCrypt.Verify(input, hash);
             }
             catch (Exception ex)

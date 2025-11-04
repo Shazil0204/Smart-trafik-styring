@@ -1,4 +1,3 @@
-
 namespace Smart_trafic_controller_api.Mappers
 {
     public static class UserMapper

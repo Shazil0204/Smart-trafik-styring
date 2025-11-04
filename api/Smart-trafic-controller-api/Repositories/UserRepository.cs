@@ -51,7 +51,7 @@ namespace Smart_trafic_controller_api.Repositories
         public async Task<bool> SoftDeleteUserAsync(Guid userId)
         {
             try
-            { 
+            {
                 User? user = await _context.Users.FindAsync(userId);
                 if (user == null || user.IsDeleted)
                 {

@@ -26,10 +26,14 @@ namespace Smart_trafic_controller_api.Repositories
             try
             {
                 // Now we can do fast database lookup with SHA256 hash
-                string hashedToken = Smart_trafic_controller_api.ValueObjects.RefreshTokenValueObject.ComputeSha256Hash(rawToken);
+                string hashedToken =
+                    Smart_trafic_controller_api.ValueObjects.RefreshTokenValueObject.ComputeSha256Hash(
+                        rawToken
+                    );
 
-                return await _context.RefreshTokens
-                    .FirstOrDefaultAsync(rt => rt.TokenHash == hashedToken && !rt.IsRevoked && rt.ExpiresAt > DateTime.UtcNow);
+                return await _context.RefreshTokens.FirstOrDefaultAsync(rt =>
+                    rt.TokenHash == hashedToken && !rt.IsRevoked && rt.ExpiresAt > DateTime.UtcNow
+                );
             }
             catch (Exception ex)
             {
@@ -42,10 +46,17 @@ namespace Smart_trafic_controller_api.Repositories
             try
             {
                 // Fast database lookup with SHA256 hash + UserId filter
-                string hashedToken = Smart_trafic_controller_api.ValueObjects.RefreshTokenValueObject.ComputeSha256Hash(rawToken);
+                string hashedToken =
+                    Smart_trafic_controller_api.ValueObjects.RefreshTokenValueObject.ComputeSha256Hash(
+                        rawToken
+                    );
 
-                return await _context.RefreshTokens
-                    .FirstOrDefaultAsync(rt => rt.UserId == userId && rt.TokenHash == hashedToken && !rt.IsRevoked && rt.ExpiresAt > DateTime.UtcNow);
+                return await _context.RefreshTokens.FirstOrDefaultAsync(rt =>
+                    rt.UserId == userId
+                    && rt.TokenHash == hashedToken
+                    && !rt.IsRevoked
+                    && rt.ExpiresAt > DateTime.UtcNow
+                );
             }
             catch (Exception ex)
             {

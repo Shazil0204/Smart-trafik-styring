@@ -5,16 +5,27 @@ using Smart_trafic_controller_api.ValueObjects;
 
 namespace Smart_trafic_controller_api.Services
 {
-    public class RefreshTokenService(IConfiguration config, IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator, IRefreshTokenRepository refreshTokenRepository) : IRefreshTokenService
+    public class RefreshTokenService(
+        IConfiguration config,
+        IUserRepository userRepository,
+        IJwtTokenGenerator jwtTokenGenerator,
+        IRefreshTokenRepository refreshTokenRepository
+    ) : IRefreshTokenService
     {
         private readonly Hashing _hashing = new();
         private readonly IConfiguration _config = config;
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
         private readonly IRefreshTokenRepository _refreshTokenRepository = refreshTokenRepository;
-        public async Task<(string Jwt, RefreshTokenValueObject RefreshToken)> LoginAsync(string username, string password)
+
+        public async Task<(string Jwt, RefreshTokenValueObject RefreshToken)> LoginAsync(
+            string username,
+            string password
+        )
         {
-            User? user = await _userRepository.GetUserByUserNameAsync(username) ?? throw new Exception("Invalid username.");
+            User? user =
+                await _userRepository.GetUserByUserNameAsync(username)
+                ?? throw new Exception("Invalid username.");
 
             if (user.Password == null || !_hashing.VerifyHash(password, user.Password))
             {
@@ -28,7 +39,11 @@ namespace Smart_trafic_controller_api.Services
             int refreshTokenDays = int.Parse(_config["JwtSettings:RefreshTokenDays"] ?? "1");
 
             DateTime refreshTokenExpiry = DateTime.UtcNow.AddDays(refreshTokenDays);
-            RefreshToken refreshTokenEntity = new RefreshToken(user.Id, refreshTokenValue, refreshTokenExpiry);
+            RefreshToken refreshTokenEntity = new RefreshToken(
+                user.Id,
+                refreshTokenValue,
+                refreshTokenExpiry
+            );
 
             await _refreshTokenRepository.AddAsync(refreshTokenEntity);
             await _refreshTokenRepository.SaveChangesAsync();
@@ -36,14 +51,20 @@ namespace Smart_trafic_controller_api.Services
             return (jwt, refreshTokenValue);
         }
 
-        public async Task<(string Jwt, RefreshTokenValueObject RefreshToken)> RefreshTokenAsync(string refreshToken, Guid? userId = null)
+        public async Task<(string Jwt, RefreshTokenValueObject RefreshToken)> RefreshTokenAsync(
+            string refreshToken,
+            Guid? userId = null
+        )
         {
             RefreshToken? existingToken;
 
             if (userId.HasValue)
             {
                 // Much faster - only check tokens for this user
-                existingToken = await _refreshTokenRepository.GetByTokenHashAndUserIdAsync(refreshToken, userId.Value);
+                existingToken = await _refreshTokenRepository.GetByTokenHashAndUserIdAsync(
+                    refreshToken,
+                    userId.Value
+                );
             }
             else
             {
@@ -64,7 +85,11 @@ namespace Smart_trafic_controller_api.Services
 
             int refreshTokenDays = int.Parse(_config["JwtSettings:RefreshTokenDays"] ?? "1");
             DateTime refreshTokenExpiry = DateTime.UtcNow.AddDays(refreshTokenDays);
-            RefreshToken newRefreshTokenEntity = new(existingToken.UserId, newRefreshToken, refreshTokenExpiry);
+            RefreshToken newRefreshTokenEntity = new(
+                existingToken.UserId,
+                newRefreshToken,
+                refreshTokenExpiry
+            );
 
             // Revoke old token and save new one
             existingToken.Revoke();
@@ -83,7 +108,10 @@ namespace Smart_trafic_controller_api.Services
             if (userId.HasValue)
             {
                 // Much faster - only check tokens for this user
-                existingToken = await _refreshTokenRepository.GetByTokenHashAndUserIdAsync(refreshToken, userId.Value);
+                existingToken = await _refreshTokenRepository.GetByTokenHashAndUserIdAsync(
+                    refreshToken,
+                    userId.Value
+                );
             }
             else
             {

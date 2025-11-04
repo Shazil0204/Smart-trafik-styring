@@ -9,7 +9,7 @@ namespace Smart_trafic_controller_api.Entities
         public string EntityId { get; private set; } = null!;
 
         private AuditLog() { } // For EF Core
-        
+
         public AuditLog(string operationType, string entityName, string entityId)
         {
             Timestamp = DateTime.UtcNow;

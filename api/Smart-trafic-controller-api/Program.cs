@@ -30,9 +30,7 @@ namespace Smart_trafic_controller_api
             builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-            builder.Services.AddScoped<ITrafficEventService, TrafficEventService>();
-            builder.Services.AddScoped<ITrafficEventRepository, TrafficEventRepository>();
-            builder.Services.AddScoped<ISensorLogService, SensorlogService>();
+            builder.Services.AddScoped<ISensorLogService, SensorLogService>();
             builder.Services.AddScoped<ISensorLogRepository, SensorLogRepository>();
 
             builder.Services.AddHostedService<MqttSubscriberBackgroundService>();

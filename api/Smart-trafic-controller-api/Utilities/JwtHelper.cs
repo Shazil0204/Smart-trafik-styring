@@ -12,7 +12,9 @@ namespace Smart_trafic_controller_api.Utilities
                 var handler = new JwtSecurityTokenHandler();
                 var jsonToken = handler.ReadJwtToken(token);
 
-                var userIdClaim = jsonToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub);
+                var userIdClaim = jsonToken.Claims.FirstOrDefault(x =>
+                    x.Type == JwtRegisteredClaimNames.Sub
+                );
 
                 if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId))
                 {

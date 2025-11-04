@@ -15,7 +15,9 @@ namespace Smart_trafic_controller_api.Services
         {
             try
             {
-                User? userExists = await _userRepository.GetUserByUserNameAsync(requestDTO.UserName);
+                User? userExists = await _userRepository.GetUserByUserNameAsync(
+                    requestDTO.UserName
+                );
                 if (userExists != null)
                 {
                     throw new Exception("User with the same username already exists.");
@@ -33,7 +35,6 @@ namespace Smart_trafic_controller_api.Services
                 User createdUser = await _userRepository.CreateUserAsync(user);
                 return UserMapper.ToResponseDTO(createdUser);
             }
-
             catch (Exception)
             {
                 throw;

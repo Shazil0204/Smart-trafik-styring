@@ -1,13 +1,15 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Smart_trafic_controller_api.Interfaces;
 using Microsoft.IdentityModel.Tokens;
+using Smart_trafic_controller_api.Interfaces;
+
 namespace Smart_trafic_controller_api.Utilities
 {
     public class JwtTokenGenerator : IJwtTokenGenerator
     {
         private readonly IConfiguration _config;
+
         public JwtTokenGenerator(IConfiguration config)
         {
             _config = config;
@@ -27,8 +29,11 @@ namespace Smart_trafic_controller_api.Utilities
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim(ClaimTypes.Role, role.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
-            };  
+                new Claim(
+                    JwtRegisteredClaimNames.Iat,
+                    DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()
+                ),
+            };
 
             JwtSecurityToken? token = new JwtSecurityToken(
                 issuer: issuer,

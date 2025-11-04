@@ -12,13 +12,12 @@ namespace Smart_trafic_controller_api.Mappers
 
         public static SensorLogResponseDTO ToResponseDTO(this SensorLog sensorLog)
         {
-            return new SensorLogResponseDTO(
-                sensorLog.Timestamp,
-                sensorLog.SensorValue
-            );
+            return new SensorLogResponseDTO(sensorLog.Timestamp, sensorLog.SensorValue);
         }
 
-        public static List<SensorLogResponseDTO> ToResponseListDTO(this IEnumerable<SensorLog> sensorLogs)
+        public static List<SensorLogResponseDTO> ToResponseListDTO(
+            this IEnumerable<SensorLog> sensorLogs
+        )
         {
             return sensorLogs.Select(sl => sl.ToResponseDTO()).ToList();
         }

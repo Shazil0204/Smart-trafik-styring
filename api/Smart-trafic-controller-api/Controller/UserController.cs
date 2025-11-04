@@ -33,7 +33,10 @@ namespace Smart_trafic_controller_api.Controller
             try
             {
                 // Assuming userId is obtained from the authenticated user's context
-                Guid userId = Guid.Parse(User.FindFirst("sub")?.Value ?? throw new Exception("User ID not found in token."));
+                Guid userId = Guid.Parse(
+                    User.FindFirst("sub")?.Value
+                        ?? throw new Exception("User ID not found in token.")
+                );
                 var userInfo = await _userService.GetUserByIdAsync(userId);
                 if (userInfo == null)
                     return NotFound("User not found.");

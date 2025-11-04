@@ -1,5 +1,4 @@
 using Smart_trafic_controller_api.DTOs.SensorLog;
-using Smart_trafic_controller_api.DTOs.TrafficEvent;
 using Smart_trafic_controller_api.Entities;
 using Smart_trafic_controller_api.Enums;
 using Smart_trafic_controller_api.Interfaces;
@@ -7,13 +6,9 @@ using Smart_trafic_controller_api.Mappers;
 
 namespace Smart_trafic_controller_api.Services
 {
-    public class SensorlogService(
-        ISensorLogRepository sensorLogRepository,
-        ITrafficEventService trafficEventService
-    ) : ISensorLogService
+    public class SensorLogService(ISensorLogRepository sensorLogRepository) : ISensorLogService
     {
         private readonly ISensorLogRepository _sensorLogRepository = sensorLogRepository;
-        private readonly ITrafficEventService _trafficEventService = trafficEventService;
 
         public async Task<List<SensorLogResponseDTO>> GetAllSensorLogsAsync()
         {
@@ -69,9 +64,6 @@ namespace Smart_trafic_controller_api.Services
                         "Sensor type and sensor value cannot be null or empty."
                     );
                 }
-
-                CreateTrafficEventRequestDTO createTrafficEventRequestDTO =
-                    new CreateTrafficEventRequestDTO(sensorValue == SensorValue.VEHICLE_GREEN);
 
                 SensorLog createdSensorLog = await _sensorLogRepository.CreateSensorLogAsync(
                     new SensorLog(sensorValue)
