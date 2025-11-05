@@ -1,9 +1,0 @@
-namespace Smart_traffic_controller_api.DTOs.User
-{
-    public class UserResponseDTO(Guid id, string userName, DateTime createdAt)
-    {
-        public Guid Id { get; set; } = id;
-        public string UserName { get; set; } = userName;
-        public DateTime CreatedAt { get; set; } = createdAt;
-    }
-}

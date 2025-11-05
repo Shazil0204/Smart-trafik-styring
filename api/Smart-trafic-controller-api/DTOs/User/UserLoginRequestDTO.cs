@@ -1,8 +1,0 @@
-namespace Smart_traffic_controller_api.DTOs.User
-{
-    public class UserLoginRequestDTO(string userName, string password)
-    {
-        public string UserName { get; set; } = userName;
-        public string Password { get; set; } = password;
-    }
-}
