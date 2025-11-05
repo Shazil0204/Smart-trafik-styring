@@ -39,5 +39,19 @@ namespace Smart_traffic_controller_api.Controller
 
             return Ok(sensorLogs);
         }
+
+        [HttpGet("average-traffic-light-duration")]
+        public async Task<IActionResult> GetAverageTrafficLightDuration()
+        {
+            float averageDuration =
+                await _sensorLogService.GetAverageTrafficLightDurationAsync();
+
+            if (averageDuration < 0)
+            {
+                return NotFound("No traffic light duration data available.");
+            }
+
+            return Ok(averageDuration);
+        }
     }
 }
