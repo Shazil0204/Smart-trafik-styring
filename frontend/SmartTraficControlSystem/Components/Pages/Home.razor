@@ -9,19 +9,15 @@
         <!-- Flow Stats -->
         <MudItem xs="12" md="4">
             <MudPaper Elevation="4" Class="pa-4 d-flex flex-column justify-space-between" Style="height:100%">
-                <MudText Typo="Typo.h6">Pedestrian green light duration</MudText>
-                <MudProgressCircular Value="@averagePedestrianDuration" Color="Color.Success" Size="Size.Medium" />
-
-
-                <MudText Typo="Typo.body2" Class="mt-2">@($"{averagePedestrianDuration:F2}/s Average pedestrian green light duration")</MudText>
+                <MudText Typo="Typo.h5">Pedestrian green light duration</MudText>
+                <MudText Typo="Typo.h6" Class="mt-2">@($"{averagePedestrianDuration:F2}/s Average pedestrian green light duration")</MudText>
             </MudPaper>
         </MudItem>
 
         <MudItem xs="12" md="4">
             <MudPaper Elevation="4" Class="pa-4 d-flex flex-column justify-space-between" Style="height:100%">
-                <MudText Typo="Typo.h6">Vehicle green light duration</MudText>
-                <MudProgressCircular Value="@averageVehicleDuration" Color="Color.Primary" Size="Size.Medium" />
-                <MudText Typo="Typo.body2" Class="mt-2">@($"{averageVehicleDuration:F2}/s Average vehicle green light duration")</MudText>
+                <MudText Typo="Typo.h5">Vehicle green light duration</MudText>
+                <MudText Typo="Typo.h6" Class="mt-2">@($"{averageVehicleDuration:F2}/s Average vehicle green light duration")</MudText>
             </MudPaper>
         </MudItem>
 
@@ -29,7 +25,7 @@
         <MudItem xs="12" md="4">
             <MudPaper Elevation="4" Class="pa-4 d-flex flex-column justify-space-between" Style="height:100%">
 
-                <MudText Typo="Typo.h6">Current Light Status</MudText>
+                <MudText Typo="Typo.h5">Current Light Status</MudText>
                 <MudGrid Spacing="2" Class="mt-2">
                     <MudItem xs="2">
                         <MudStack Direction="Direction.column">
@@ -108,29 +104,54 @@
     private double averagePedestrianDuration = 0;
 
     private void CalculateAverageDuration(List<Utilities.Models.SensorDataModel> sensorData)
+{
+    double totalGreenDuration = 0;
+    double totalRedDuration = 0;
+    int greenCycles = 0;
+    int redCycles = 0;
+
+    DateTime? greenStartTime = null;
+    DateTime? redStartTime = null;
+
+    foreach (var data in sensorData.OrderBy(d => d.Timestamp))
     {
-        double totalVehicleDuration = 0;
-        double totalPedestrianDuration = 0;
-
-        foreach (var data in sensorData)
+        if (data.SensorValue == "VEHICLE_GREEN")
         {
-            if (data.SensorValue == "VEHICLE_GREEN")
+            // If we were in red, close that cycle
+            if (redStartTime != null)
             {
-                totalVehicleDuration += data.Timestamp.Second;
-            }
-            else if (data.SensorValue == "VEHICLE_RED")
-            {
-                totalPedestrianDuration += data.Timestamp.Second;
+                TimeSpan redDuration = data.Timestamp - redStartTime.Value;
+                totalRedDuration += redDuration.TotalSeconds;
+                redCycles++;
+                redStartTime = null;
             }
 
+            // Start green cycle
+            if (greenStartTime == null)
+                greenStartTime = data.Timestamp;
         }
+        else if (data.SensorValue == "VEHICLE_RED")
+        {
+            // If we were in green, close that cycle
+            if (greenStartTime != null)
+            {
+                TimeSpan greenDuration = data.Timestamp - greenStartTime.Value;
+                totalGreenDuration += greenDuration.TotalSeconds;
+                greenCycles++;
+                greenStartTime = null;
+            }
 
-        int vehicleCount = sensorData.Count(d => d.SensorValue == "VEHICLE_GREEN");
-        int pedestrianCount = sensorData.Count(d => d.SensorValue == "VEHICLE_RED");
-
-        averageVehicleDuration = vehicleCount > 0 ? Math.Round(totalVehicleDuration / vehicleCount, 2) : 0;
-        averagePedestrianDuration = pedestrianCount > 0 ? Math.Round(totalPedestrianDuration / pedestrianCount, 2) : 0;
+            // Start red cycle
+            if (redStartTime == null)
+                redStartTime = data.Timestamp;
+        }
     }
+
+     
+    averageVehicleDuration = greenCycles > 0 ? Math.Round(totalGreenDuration / greenCycles, 2) : 0;
+    averagePedestrianDuration = redCycles > 0 ? Math.Round(totalRedDuration / redCycles, 2) : 0;
+}
+
 
     private void CalculatePieChartData(List<Utilities.Models.SensorDataModel> sensorData)
     {
