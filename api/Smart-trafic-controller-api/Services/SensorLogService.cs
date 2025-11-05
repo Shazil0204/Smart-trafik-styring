@@ -51,35 +51,5 @@ namespace Smart_traffic_controller_api.Services
 
             await _sensorLogRepository.CreateSensorLogAsync(new SensorLog(sensorValue));
         }
-
-        public async Task<float> GetAverageTrafficLightDurationAsync()
-        {
-            List<SensorLog> sensorLogs = await _sensorLogRepository.GetAllSensorLogsAsync();
-
-            List<float> eachTrafficLightDurations = [];
-
-            DateTime? greenStartTime = null;
-
-            foreach (var log in sensorLogs)
-            {
-                if (log.SensorValue == SensorValue.VEHICLE_GREEN && greenStartTime == null)
-                {
-                    greenStartTime = log.Timestamp;
-                }
-                else if (log.SensorValue == SensorValue.VEHICLE_RED && greenStartTime != null)
-                {
-                    TimeSpan duration = log.Timestamp - greenStartTime.Value;
-                    eachTrafficLightDurations.Add((float)duration.TotalSeconds);
-                    greenStartTime = null;
-                }
-            }
-
-            if (eachTrafficLightDurations.Count == 0)
-            {
-                return 0;
-            }
-
-            return eachTrafficLightDurations.Average();
-        }
     }
 }

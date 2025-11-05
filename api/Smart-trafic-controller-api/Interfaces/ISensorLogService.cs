@@ -11,6 +11,5 @@ namespace Smart_traffic_controller_api.Interfaces
             DateTime endTime
         );
         Task CreateSensorLogAsync(SensorValue sensorValue);
-        Task<float> GetAverageTrafficLightDurationAsync();
     }
 }
