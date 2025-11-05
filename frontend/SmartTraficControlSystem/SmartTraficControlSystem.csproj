@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MQTTnet" Version="3.0.5" />
     <PackageReference Include="MudBlazor" Version="8.13.0" />
   </ItemGroup>
 

@@ -29,6 +29,7 @@ builder.Services.AddHttpClient("SmartTrafficControlSystemAPI", (serviceProvider,
 
 // builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<SensorService>();
+builder.Services.AddSingleton<MqttService>(); // Singleton to maintain MQTT connection
 
 var app = builder.Build();
 

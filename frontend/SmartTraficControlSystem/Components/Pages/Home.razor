@@ -2,23 +2,26 @@
 @using SmartTraficControlSystem.Components.Services
 @using SmartTraficControlSystem.Utilities.Models
 @inject SensorService sensorService
+@inject MqttService mqttService
 <MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
     <MudGrid>
 
         <!-- Flow Stats -->
         <MudItem xs="12" md="4">
             <MudPaper Elevation="4" Class="pa-4 d-flex flex-column justify-space-between" Style="height:100%">
-                <MudText Typo="Typo.h6">Pedestrian Flow</MudText>
-                <MudProgressCircular Value="65" Color="Color.Success" Size="Size.Medium" />
-                <MudText Typo="Typo.body2" Class="mt-2">65 pedestrians/hour</MudText>
+                <MudText Typo="Typo.h6">Pedestrian green light duration</MudText>
+                <MudProgressCircular Value="@averagePedestrianDuration" Color="Color.Success" Size="Size.Medium" />
+
+
+                <MudText Typo="Typo.body2" Class="mt-2">@($"{averagePedestrianDuration:F2}/s Average pedestrian green light duration")</MudText>
             </MudPaper>
         </MudItem>
 
         <MudItem xs="12" md="4">
             <MudPaper Elevation="4" Class="pa-4 d-flex flex-column justify-space-between" Style="height:100%">
-                <MudText Typo="Typo.h6">Vehicle Flow</MudText>
-                <MudProgressCircular Value="80" Color="Color.Primary" Size="Size.Medium" />
-                <MudText Typo="Typo.body2" Class="mt-2">80 vehicles/hour</MudText>
+                <MudText Typo="Typo.h6">Vehicle green light duration</MudText>
+                <MudProgressCircular Value="@averageVehicleDuration" Color="Color.Primary" Size="Size.Medium" />
+                <MudText Typo="Typo.body2" Class="mt-2">@($"{averageVehicleDuration:F2}/s Average vehicle green light duration")</MudText>
             </MudPaper>
         </MudItem>
 
@@ -30,14 +33,14 @@
                 <MudGrid Spacing="2" Class="mt-2">
                     <MudItem xs="2">
                         <MudStack Direction="Direction.column">
-                            <MudAvatar Size="Size.Large" Color="Color.Success"
+                            <MudAvatar Size="Size.Large" Color="@(!vehicleLightIsGreen ? Color.Error : Color.Success)"
                                 Icon="@Icons.Material.Filled.PlayArrow" />
                             <MudText Typo="Typo.caption">Vehicles</MudText>
                         </MudStack>
                     </MudItem>
                     <MudItem xs="6">
                         <MudStack Direction="Direction.column">
-                            <MudAvatar Size="Size.Large" Color="Color.Error" Icon="@Icons.Material.Filled.Pause" />
+                            <MudAvatar Size="Size.Large" Color="@(vehicleLightIsGreen ? Color.Error : Color.Success)" Icon="@Icons.Material.Filled.Pause" />
                             <MudText Typo="Typo.caption">Pedestrians</MudText>
                         </MudStack>
                     </MudItem>
@@ -68,12 +71,66 @@
         var sensorData = await sensorService.GetSensorDataAsync();
         CalculatePieChartData(sensorData);
         CalculateBarChartData(sensorData);
+        CalculateAverageDuration(sensorData);
+        
+        // Connect to MQTT and subscribe to traffic light updates
+        try
+        {
+            await mqttService.ConnectAsync();
+            await mqttService.SubscribeAsync("traffic/light");
+
+        }catch(Exception ex){
+            Console.WriteLine($"MQTT subscription failed: {ex.Message}");
+
+        }
+        mqttService.OnMessageReceived += (payload) =>
+        {
+            Console.WriteLine($"MQTT Message received on topic  {payload}");
+            InvokeAsync(StateHasChanged); // Update UI when MQTT message received
+        };
+        // Subscribe to MQTT events for real-time updates
+        mqttService.OnVehicleLightChanged += (isGreen) =>
+        {
+            vehicleLightIsGreen = isGreen;
+            InvokeAsync(StateHasChanged); // Update UI when MQTT message received
+        };
     }
+
+    private bool vehicleLightIsGreen = false;
 
     private double[] data = new double[2];
     private int _index = -1; //default value cannot be 0 -> first selectedindex is 0.
     private int _pieIndex = -1; //for pie chart
     private string[] labels = { "Vehicles", "Pedestrians" };
+
+    // Added fields for binding in the UI
+    private double averageVehicleDuration = 0;
+    private double averagePedestrianDuration = 0;
+
+    private void CalculateAverageDuration(List<Utilities.Models.SensorDataModel> sensorData)
+    {
+        double totalVehicleDuration = 0;
+        double totalPedestrianDuration = 0;
+
+        foreach (var data in sensorData)
+        {
+            if (data.SensorValue == "VEHICLE_GREEN")
+            {
+                totalVehicleDuration += data.Timestamp.Second;
+            }
+            else if (data.SensorValue == "VEHICLE_RED")
+            {
+                totalPedestrianDuration += data.Timestamp.Second;
+            }
+
+        }
+
+        int vehicleCount = sensorData.Count(d => d.SensorValue == "VEHICLE_GREEN");
+        int pedestrianCount = sensorData.Count(d => d.SensorValue == "VEHICLE_RED");
+
+        averageVehicleDuration = vehicleCount > 0 ? Math.Round(totalVehicleDuration / vehicleCount, 2) : 0;
+        averagePedestrianDuration = pedestrianCount > 0 ? Math.Round(totalPedestrianDuration / pedestrianCount, 2) : 0;
+    }
 
     private void CalculatePieChartData(List<Utilities.Models.SensorDataModel> sensorData)
     {
