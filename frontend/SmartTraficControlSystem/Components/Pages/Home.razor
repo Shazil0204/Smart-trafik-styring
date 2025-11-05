@@ -1,7 +1,7 @@
 ﻿@page "/"
-@* <AuthorizeView>
-
-</AuthorizeView> *@
+@using SmartTraficControlSystem.Components.Services
+@using SmartTraficControlSystem.Utilities.Models
+@inject SensorService sensorService
 <MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
     <MudGrid>
 
@@ -48,26 +48,101 @@
     <MudGrid>
         <MudItem xs="12" md="7">
             <MudPaper Elevation="4" Class="mt-4 pa-4">
-                <MudChart ChartType="ChartType.Bar" ChartSeries="@_series"
-                    @bind-SelectedIndex="_index" XAxisLabels="@_xAxisLabels" Width="100%" Height="350px"
-                    AxisChartOptions="_axisChartOptions">
+                <MudChart ChartType="ChartType.Bar" ChartSeries="@_series" @bind-SelectedIndex="_index"
+                    XAxisLabels="@_xAxisLabels" Width="100%" Height="350px" AxisChartOptions="_axisChartOptions">
                 </MudChart>
             </MudPaper>
         </MudItem>
         <MudItem xs="12" md="5">
             <MudPaper Elevation="4" Class="mt-4 pa-4">
-                <MudChart ChartType="ChartType.Pie" InputData="@data" @bind-SelectedIndex="_pieIndex" InputLabels="@labels" Width="100%" Height="350px" />
+                <MudChart ChartType="ChartType.Pie" InputData="@data" @bind-SelectedIndex="_pieIndex"
+                    InputLabels="@labels" Width="100%" Height="350px" />
             </MudPaper>
         </MudItem>
     </MudGrid>
 
 </MudContainer>
 @code {
+    protected override async Task OnInitializedAsync()
+    {
+        var sensorData = await sensorService.GetSensorDataAsync();
+        CalculatePieChartData(sensorData);
+        CalculateBarChartData(sensorData);
+    }
+
+    private double[] data = new double[2];
     private int _index = -1; //default value cannot be 0 -> first selectedindex is 0.
     private int _pieIndex = -1; //for pie chart
-    
-    private double[] data = new double[] { 65, 80 };
-    
+    private string[] labels = { "Vehicles", "Pedestrians" };
+
+    private void CalculatePieChartData(List<Utilities.Models.SensorDataModel> sensorData)
+    {
+
+
+        double pedestrianCount = 0;
+        double vehicleCount = 0;
+
+        foreach (var data in sensorData)
+        {
+            if (data.SensorValue == "VEHICLE_GREEN")
+            {
+                vehicleCount++;
+            }
+            else if (data.SensorValue == "VEHICLE_RED")
+            {
+                pedestrianCount++;
+            }
+        }
+
+        data = new double[] { vehicleCount, pedestrianCount };
+    }
+
+    private void CalculateBarChartData(List<Utilities.Models.SensorDataModel> sensorData)
+    {
+        List<SensorDataModel> dailySensorData = sensorData.Where(d => d.Timestamp.Date == DateTime.Now.Date).ToList();
+
+        // Group data by hour (0-23)
+        Dictionary<int, (double vehicles, double pedestrians)> hourlyData = new();
+
+        // Initialize all hours with 0 counts
+        for (int hour = 0; hour < 24; hour++)
+        {
+            hourlyData[hour] = (0, 0);
+        }
+
+        // Count sensor events by hour
+        foreach (var item in dailySensorData)
+        {
+            int hour = item.Timestamp.Hour;
+            var currentData = hourlyData[hour];
+
+            if (item.SensorValue == "VEHICLE_GREEN")
+            {
+                hourlyData[hour] = (currentData.vehicles + 1, currentData.pedestrians);
+            }
+            else if (item.SensorValue == "VEHICLE_RED")
+            {
+                hourlyData[hour] = (currentData.vehicles, currentData.pedestrians + 1);
+            }
+        }
+
+        // Update chart series with calculated hourly data
+        var vehicleData = new double[24];
+        var pedestrianData = new double[24];
+
+        for (int hour = 0; hour < 24; hour++)
+        {
+            vehicleData[hour] = hourlyData[hour].vehicles;
+            pedestrianData[hour] = hourlyData[hour].pedestrians;
+        }
+
+        _series = new List<ChartSeries>()
+{
+new ChartSeries() { Name = "Vehicles", Data = vehicleData },
+new ChartSeries() { Name = "Pedestrians", Data = pedestrianData }
+};
+    }
+
     private AxisChartOptions _axisChartOptions = new AxisChartOptions()
     {
         XAxisLabelRotation = 30,
@@ -76,15 +151,11 @@
 
     private List<ChartSeries> _series = new List<ChartSeries>()
 {
-new ChartSeries() { Name = "Vehicles", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80, 15 , 40, 20, 25, 27, 46,
-60, 48, 80, 15 , 27, 46, 60, 48, 80, 15, 100 } },
-new ChartSeries() { Name = "pedestrians", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31,19, 24, 35, 13, 28,
-15, 13, 16, 31 , 13, 28, 15, 13, 16, 31, 90 } },
-
+new ChartSeries() { Name = "Vehicles", Data = new double[24] },
+new ChartSeries() { Name = "Pedestrians", Data = new double[24] }
 };
-    private string[] _xAxisLabels = { "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00",
-"08:00","09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00","19:00", "20:00",
-"21:00", "22:00", "23:00", "24:00" };
 
-    private string[] labels = { "Vehicles", "Pedestrians" };
+    private string[] _xAxisLabels = { "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00",
+"08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00",
+"19:00", "20:00", "21:00", "22:00", "23:00" };
 }

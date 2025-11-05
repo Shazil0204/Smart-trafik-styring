@@ -22,12 +22,13 @@ builder.Services.AddMudServices();
 builder.Services.AddHttpClient("SmartTrafficControlSystemAPI", (serviceProvider, client) =>
 {
     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-    var apiBaseUrl = configuration["Api:BaseUrl"] ?? "http://localhost";
+    var apiBaseUrl = configuration["Api:BaseUrl"] ?? "http://localhost:5010/";
     client.BaseAddress = new Uri(apiBaseUrl);
     client.Timeout = TimeSpan.FromSeconds(30); // Set reasonable timeout
 });
 
-builder.Services.AddScoped<AccountService>();
+// builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<SensorService>();
 
 var app = builder.Build();
 
