@@ -21,7 +21,7 @@ namespace SmartTraficControlSystem.Components.Services
 
             var options = new MQTTnet.Client.Options.MqttClientOptionsBuilder()
                 .WithClientId("SmartTrafficControlSystemClient")
-                .WithTcpServer("localhost", 1883) //todo make docker compatible
+                .WithTcpServer("mosquitto", 1883) //todo make docker compatible
                 .WithCleanSession()
                 .Build();
 
